@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Notes – Interactive Study Guide</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--bg4:#222;
+  --text:#e8e8e8;--text2:#aaa;--text3:#666;
+  --blue:#00d4ff;--purple:#a78bfa;--green:#4ade80;
+  --yellow:#fbbf24;--orange:#f97316;--red:#f87171;
+  --pink:#f472b6;--teal:#2dd4bf;
+  --border:#2a2a2a;--border2:#333;
+}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+#sidebar{width:260px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+#logo{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+#logo h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#logo p{font-size:11px;color:var(--text3);margin-top:3px}
+.nav-section{padding:12px 0}
+.nav-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 20px 8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;border-left:2px solid transparent}
+.nav-item:hover{color:var(--text);background:var(--bg3)}
+.nav-item.active{color:var(--blue);background:rgba(0,212,255,.06);border-left-color:var(--blue)}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.complexity-badge{font-size:9px;padding:2px 5px;border-radius:3px;margin-left:auto;font-weight:600}
+.o1{background:rgba(74,222,128,.15);color:var(--green)}
+.ologn{background:rgba(0,212,255,.15);color:var(--blue)}
+.on{background:rgba(251,191,36,.15);color:var(--yellow)}
+.onlogn{background:rgba(249,115,22,.15);color:var(--orange)}
+.on2{background:rgba(248,113,113,.15);color:var(--red)}
+
+/* MAIN */
+#main{flex:1;overflow-y:auto;padding:0}
+.page{display:none;padding:40px 48px;max-width:900px;margin:0 auto;animation:fadein .3s ease}
+.page.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* TYPOGRAPHY */
+.page-title{font-size:28px;font-weight:700;margin-bottom:6px}
+.page-subtitle{color:var(--text2);font-size:15px;margin-bottom:32px;line-height:1.6}
+h2{font-size:20px;font-weight:600;margin:36px 0 14px;color:var(--text)}
+h3{font-size:16px;font-weight:600;margin:24px 0 10px;color:var(--blue)}
+p{color:var(--text2);line-height:1.75;margin-bottom:14px;font-size:14px}
+.highlight{color:var(--text);font-weight:500}
+
+/* CARDS */
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:16px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:24px}
+.info-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+.info-card h4{font-size:13px;font-weight:600;color:var(--blue);margin-bottom:6px}
+.info-card p{font-size:13px;margin:0}
+
+/* CODE */
+pre{background:#0a0a0a;border:1px solid var(--border);border-radius:8px;padding:18px;overflow-x:auto;margin:16px 0;font-size:13px;line-height:1.7}
+code{font-family:'Cascadia Code','Fira Code',monospace;color:#c9d1d9}
+.kw{color:#ff79c6}.fn{color:#50fa7b}.str{color:#f1fa8c}.cm{color:#6272a4}.num{color:#bd93f9}
+
+/* COMPLEXITY TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.comp-table th{background:var(--bg4);color:var(--text2);padding:10px 14px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border2)}
+.comp-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:var(--bg4)}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px}
+
+/* VISUALIZER */
+.viz-container{background:#0a0a0a;border:1px solid var(--border2);border-radius:10px;padding:20px;margin:20px 0}
+.viz-title{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;font-weight:600}
+.viz-controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.btn{background:transparent;border:1px solid var(--border2);color:var(--text2);padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;transition:all .15s}
+.btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(0,212,255,.05)}
+.btn.primary{background:var(--blue);color:#000;border-color:var(--blue)}
+.btn.primary:hover{background:#00b8d9}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+input[type=range]{accent-color:var(--blue);width:120px}
+.speed-label{font-size:12px;color:var(--text3)}
+
+/* ARRAY DISPLAY */
+.array-row{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end;min-height:60px}
+.arr-cell{display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .3s ease}
+.arr-val{background:var(--bg4);border:1px solid var(--border2);border-radius:6px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;transition:all .3s ease}
+.arr-idx{font-size:10px;color:var(--text3)}
+.arr-cell.active .arr-val{border-color:var(--yellow);background:rgba(251,191,36,.1);color:var(--yellow)}
+.arr-cell.found .arr-val{border-color:var(--green);background:rgba(74,222,128,.15);color:var(--green)}
+.arr-cell.pivot .arr-val{border-color:var(--purple);background:rgba(167,139,250,.15);color:var(--purple)}
+.arr-cell.sorted .arr-val{border-color:var(--teal);background:rgba(45,212,191,.1);color:var(--teal)}
+.arr-cell.comparing .arr-val{border-color:var(--orange);background:rgba(249,115,22,.12);color:var(--orange)}
+.arr-cell.swapping .arr-val{border-color:var(--red);background:rgba(248,113,113,.12);color:var(--red)}
+.arr-cell.mid .arr-val{border-color:var(--pink);background:rgba(244,114,182,.15);color:var(--pink)}
+
+/* STATUS */
+.status{font-size:13px;color:var(--text2);padding:10px 0;min-height:32px}
+.status .step{color:var(--blue);font-weight:500}
+
+/* STACK VIZ */
+.stack-viz{display:flex;flex-direction:column-reverse;gap:4px;min-height:200px;justify-content:flex-start;align-items:center}
+.stack-frame{background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:10px 32px;font-size:13px;font-weight:500;transition:all .4s ease;position:relative;width:200px;text-align:center}
+.stack-frame.new{border-color:var(--blue);background:rgba(0,212,255,.1);color:var(--blue)}
+.stack-frame.top-frame{border-color:var(--purple)}
+.stack-arrow{font-size:11px;color:var(--text3);text-align:center}
+
+/* QUEUE VIZ */
+.queue-viz{display:flex;gap:6px;align-items:center;min-height:70px;flex-wrap:wrap}
+.queue-cell{background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:10px 16px;font-size:13px;font-weight:500;transition:all .4s}
+.queue-cell.front{border-color:var(--green);color:var(--green)}
+.queue-cell.rear{border-color:var(--orange);color:var(--orange)}
+.queue-label{font-size:10px;color:var(--text3);text-align:center;margin-top:4px}
+.pointer-row{display:flex;gap:6px;margin-top:6px}
+.pointer{font-size:10px;padding:2px 6px;border-radius:3px;font-weight:600}
+.ptr-front{background:rgba(74,222,128,.15);color:var(--green)}
+.ptr-rear{background:rgba(249,115,22,.15);color:var(--orange)}
+
+/* LINKED LIST */
+.ll-node{display:inline-flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden;font-size:13px;transition:all .3s}
+.ll-data{background:var(--bg4);padding:8px 14px;font-weight:600;border-right:1px solid var(--border2)}
+.ll-next{background:var(--bg3);padding:8px 10px;font-size:11px;color:var(--text3)}
+.ll-arrow{font-size:18px;color:var(--blue);padding:0 6px;align-self:center}
+.ll-null{color:var(--red);font-size:12px;align-self:center;font-weight:600;padding:8px}
+.ll-row{display:flex;align-items:center;flex-wrap:wrap;gap:2px}
+.ll-node.highlight .ll-data{background:rgba(0,212,255,.1);border-color:var(--blue);color:var(--blue)}
+.ll-node.found-node .ll-data{background:rgba(74,222,128,.1);color:var(--green)}
+
+/* TREE VIZ */
+.tree-svg{width:100%;overflow:visible}
+
+/* SORT BARS */
+.bars-container{display:flex;gap:3px;align-items:flex-end;height:120px}
+.sort-bar{width:32px;border-radius:4px 4px 0 0;transition:all .3s ease;display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;font-size:10px;color:rgba(255,255,255,.6);font-weight:600}
+.sort-bar.normal{background:var(--bg4);border:1px solid var(--border2)}
+.sort-bar.comparing{background:rgba(249,115,22,.4);border:1px solid var(--orange)}
+.sort-bar.swapping{background:rgba(248,113,113,.4);border:1px solid var(--red)}
+.sort-bar.sorted{background:rgba(45,212,191,.25);border:1px solid var(--teal)}
+.sort-bar.pivot{background:rgba(167,139,250,.35);border:1px solid var(--purple)}
+
+/* ALGO STEPS */
+.steps-list{counter-reset:step;list-style:none}
+.steps-list li{counter-increment:step;display:flex;gap:12px;margin-bottom:10px;font-size:13px;color:var(--text2);line-height:1.6;position:relative;padding-left:32px}
+.steps-list li::before{content:counter(step);position:absolute;left:0;top:0;background:var(--bg4);border:1px solid var(--border2);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue);flex-shrink:0}
+.steps-list li::before{display:flex}
+
+/* KEY TERM */
+.key-term{display:inline-block;background:rgba(167,139,250,.12);color:var(--purple);padding:1px 6px;border-radius:4px;font-size:13px;font-weight:500}
+
+/* NOTATION BOX */
+.notation{background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.2);border-radius:8px;padding:14px 18px;margin:12px 0;font-size:13px;color:var(--text2)}
+.notation strong{color:var(--blue)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+@media(max-width:700px){
+  #sidebar{display:none}
+  .page{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div id="logo">
+    <h1>DSA Notes</h1>
+    <p>Interactive Study Guide · BTech CSE</p>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Foundations</div>
+    <div class="nav-item active" onclick="show('intro')"><span class="nav-icon">📘</span>Introduction & ADT</div>
+    <div class="nav-item" onclick="show('complexity')"><span class="nav-icon">📊</span>Complexity Analysis</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Searching</div>
+    <div class="nav-item" onclick="show('linear')"><span class="nav-icon">🔍</span>Linear Search<span class="complexity-badge on">O(n)</span></div>
+    <div class="nav-item" onclick="show('binary')"><span class="nav-icon">🔎</span>Binary Search<span class="complexity-badge ologn">O(log n)</span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Linear Structures</div>
+    <div class="nav-item" onclick="show('stack')"><span class="nav-icon">📚</span>Stack (ADT)</div>
+    <div class="nav-item" onclick="show('queue')"><span class="nav-icon">🚶</span>Queue (ADT)</div>
+    <div class="nav-item" onclick="show('linkedlist')"><span class="nav-icon">🔗</span>Linked List</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Trees</div>
+    <div class="nav-item" onclick="show('trees')"><span class="nav-icon">🌳</span>Tree Basics</div>
+    <div class="nav-item" onclick="show('bst')"><span class="nav-icon">🔀</span>Binary Search Tree</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Sorting</div>
+    <div class="nav-item" onclick="show('sorting')"><span class="nav-icon">↕️</span>Sorting Overview</div>
+    <div class="nav-item" onclick="show('bubble')"><span class="nav-icon">🫧</span>Bubble Sort<span class="complexity-badge on2">O(n²)</span></div>
+    <div class="nav-item" onclick="show('selection')"><span class="nav-icon">☝️</span>Selection Sort<span class="complexity-badge on2">O(n²)</span></div>
+    <div class="nav-item" onclick="show('insertion')"><span class="nav-icon">📌</span>Insertion Sort<span class="complexity-badge on2">O(n²)</span></div>
+    <div class="nav-item" onclick="show('merge')"><span class="nav-icon">🔀</span>Merge Sort<span class="complexity-badge onlogn">O(n log n)</span></div>
+    <div class="nav-item" onclick="show('heap')"><span class="nav-icon">🏔️</span>Heap Sort<span class="complexity-badge onlogn">O(n log n)</span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Graphs</div>
+    <div class="nav-item" onclick="show('graphs')"><span class="nav-icon">🕸️</span>Graph Basics</div>
+    <div class="nav-item" onclick="show('bfsdfs')"><span class="nav-icon">🗺️</span>BFS & DFS</div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+<!-- INTRO -->
+<div class="page active" id="page-intro">
+  <div class="page-title">Introduction to Data Structures</div>
+  <p class="page-subtitle">Core concepts: Data Structures, Abstract Data Types, and Algorithm fundamentals — the foundation of everything in DSA.</p>
+
+  <div class="card-grid">
+    <div class="info-card">
+      <h4>Data Structure</h4>
+      <p>A method of arrangement in memory to hold data associated with objects to facilitate access and operations on the data.</p>
+    </div>
+    <div class="info-card">
+      <h4>Abstract Data Type (ADT)</h4>
+      <p>Describes arrangement of data without specifying how it is stored or accessed in memory. Examples: Stack, Queue, Tree.</p>
+    </div>
+    <div class="info-card">
+      <h4>Algorithm</h4>
+      <p>A method that solves a computational problem in a finite number of steps. Consumes time and memory resources.</p>
+    </div>
+  </div>
+
+  <h2>Primitive vs Abstract Data Types</h2>
+  <p>Some basic data structures are built into programming languages: <span class="key-term">int</span>, <span class="key-term">float</span>, <span class="key-term">double</span>, <span class="key-term">string</span>. These are primitive types — they directly map to how data is stored in memory.</p>
+  <p>Abstract Data Types (ADTs) like <span class="key-term">Stack</span>, <span class="key-term">Queue</span>, and <span class="key-term">Tree</span> describe operations and behavior without specifying implementation. The same ADT can be implemented in multiple ways — for example, a Stack can use an array <em>or</em> a linked list.</p>
+
+  <h2>ADT Operations</h2>
+  <p>Each ADT defines a set of allowed operations. For a Stack:</p>
+  <ul class="steps-list">
+    <li><strong>push(x)</strong> — Add element x to the top of the stack</li>
+    <li><strong>pop()</strong> — Remove and return the top element</li>
+    <li><strong>peek()</strong> — View the top element without removing it</li>
+    <li><strong>isEmpty()</strong> — Check if the stack has no elements</li>
+  </ul>
+
+  <h2>Data Structure Operations</h2>
+  <div class="card-grid">
+    <div class="info-card"><h4>Insertion</h4><p>Adding a new data element into a structure at a specified position.</p></div>
+    <div class="info-card"><h4>Deletion</h4><p>Removing an existing element from the structure.</p></div>
+    <div class="info-card"><h4>Traversal</h4><p>Accessing each element exactly once (e.g. printing all elements).</p></div>
+    <div class="info-card"><h4>Searching</h4><p>Finding the location of a given element in the structure.</p></div>
+    <div class="info-card"><h4>Sorting</h4><p>Arranging elements in a specific order (ascending or descending).</p></div>
+    <div class="info-card"><h4>Merging</h4><p>Combining elements of two sorted structures into one sorted structure.</p></div>
+  </div>
+
+  <h2>Why DSA Matters</h2>
+  <div class="notation">
+    <strong>Time-Space Tradeoff:</strong> Often, you can reduce time complexity by using more memory, or reduce memory usage at the cost of slower execution. Choosing the right data structure is about finding the best balance for your use case.
+  </div>
+</div>
+
+<!-- COMPLEXITY -->
+<div class="page" id="page-complexity">
+  <div class="page-title">Complexity Analysis</div>
+  <p class="page-subtitle">Asymptotic notations help us describe how algorithm performance scales with input size — without worrying about machine-specific details.</p>
+
+  <h2>Why Complexity Analysis?</h2>
+  <p>An algorithm's time depends on input size <span class="key-term">n</span>. For larger inputs, some algorithms become impractically slow. We analyze <strong>worst-case</strong> and <strong>average-case</strong> complexity to predict behavior as n → ∞. This is called <span class="key-term">asymptotic analysis</span>.</p>
+
+  <h2>The Three Notations</h2>
+  <div class="card-grid">
+    <div class="info-card" style="border-color:rgba(0,212,255,.3)">
+      <h4 style="color:var(--blue)">Big O — Upper Bound</h4>
+      <p><strong>f(n) is O(g(n))</strong> if there exist constants n₀, K &gt; 0 such that f(n) ≤ K·g(n) for all n ≥ n₀.</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--text3)">→ Worst-case guarantee. Used most commonly.</p>
+    </div>
+    <div class="info-card" style="border-color:rgba(74,222,128,.3)">
+      <h4 style="color:var(--green)">Omega Ω — Lower Bound</h4>
+      <p><strong>f(n) is Ω(g(n))</strong> if there exist n₀, K &gt; 0 such that f(n) ≥ K·g(n) for all n &gt; n₀.</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--text3)">→ Best-case guarantee.</p>
+    </div>
+    <div class="info-card" style="border-color:rgba(251,191,36,.3)">
+      <h4 style="color:var(--yellow)">Theta Θ — Tight Bound</h4>
+      <p><strong>f(n) is Θ(g(n))</strong> if it is both O(g(n)) and Ω(g(n)).</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--text3)">→ Exact asymptotic behavior. Strongest statement.</p>
+    </div>
+  </div>
+
+  <h2>Common Complexities (Best to Worst)</h2>
+  <table class="comp-table">
+    <thead><tr><th>Notation</th><th>Name</th><th>Example</th><th>n=100</th><th>n=1000</th><th>Rating</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge o1">O(1)</span></td><td>Constant</td><td>Array index access</td><td>1</td><td>1</td><td style="color:var(--green)">Excellent</td></tr>
+      <tr><td><span class="badge ologn">O(log n)</span></td><td>Logarithmic</td><td>Binary Search</td><td>7</td><td>10</td><td style="color:var(--blue)">Great</td></tr>
+      <tr><td><span class="badge on">O(n)</span></td><td>Linear</td><td>Linear Search</td><td>100</td><td>1,000</td><td style="color:var(--yellow)">Good</td></tr>
+      <tr><td><span class="badge onlogn">O(n log n)</span></td><td>Linearithmic</td><td>Merge Sort</td><td>664</td><td>9,966</td><td style="color:var(--orange)">Fair</td></tr>
+      <tr><td><span class="badge on2">O(n²)</span></td><td>Quadratic</td><td>Bubble Sort</td><td>10,000</td><td>1,000,000</td><td style="color:var(--red)">Poor</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Worst Case vs Average Case</h2>
+  <div class="notation">
+    <strong>Worst Case:</strong> The maximum time an algorithm takes for input of size n. This is the most commonly used measure — it gives us a guarantee.<br><br>
+    <strong>Average Case:</strong> Expected time for a random input of size n. Often harder to compute but more realistic.
+  </div>
+</div>
+
+<!-- LINEAR SEARCH -->
+<div class="page" id="page-linear">
+  <div class="page-title">Linear Search</div>
+  <p class="page-subtitle">A sequential search algorithm that checks each element one by one until a match is found or the list ends.</p>
+
+  <h2>How It Works</h2>
+  <p>Linear search starts at index 0 and compares each element with the target. If a match is found, the index is returned. If the end of the array is reached without a match, the element is not present.</p>
+  <ul class="steps-list">
+    <li>Set i = 1 (start at the beginning)</li>
+    <li>If i &gt; n, go to step 7 (not found)</li>
+    <li>If A[i] == x, go to step 6 (found!)</li>
+    <li>Increment i = i + 1</li>
+    <li>Go back to step 2</li>
+    <li>Print "Element found at index i" → Exit</li>
+    <li>Print "Element not found" → Exit</li>
+  </ul>
+
+  <h2>Interactive Visualizer</h2>
+  <div class="viz-container">
+    <div class="viz-title">Linear Search Animation</div>
+    <div style="margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <label style="font-size:12px;color:var(--text2)">Search for:</label>
+      <input type="number" id="ls-target" value="35" style="width:70px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);padding:5px 8px;border-radius:5px;font-size:13px">
+    </div>
+    <div class="array-row" id="ls-array"></div>
+    <div class="status" id="ls-status">Press <strong>Start</strong> to begin search</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="lsStart()">▶ Start</button>
+      <button class="btn" onclick="lsReset()">↺ Reset</button>
+      <span class="speed-label">Speed:</span>
+      <input type="range" min="1" max="5" value="3" id="ls-speed">
+      <span class="speed-label" id="ls-speed-val">3x</span>
+    </div>
+  </div>
+
+  <h2>Pseudocode</h2>
+  <pre><code><span class="kw">procedure</span> <span class="fn">linear_search</span>(list, value)
+  <span class="kw">for each</span> item <span class="kw">in</span> the list
+    <span class="kw">if</span> item == value
+      <span class="kw">return</span> item's location
+    <span class="kw">end if</span>
+  <span class="kw">end for</span>
+  <span class="kw">return</span> <span class="num">-1</span>  <span class="cm">// not found</span>
+<span class="kw">end procedure</span></code></pre>
+
+  <h2>Complexity Analysis</h2>
+  <table class="comp-table">
+    <thead><tr><th>Case</th><th>Scenario</th><th>Comparisons</th><th>Time Complexity</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--green)">Best</td><td>Element is at index 0</td><td>1</td><td><span class="badge o1">O(1)</span></td></tr>
+      <tr><td style="color:var(--yellow)">Average</td><td>Element is in the middle</td><td>n/2</td><td><span class="badge on">O(n)</span></td></tr>
+      <tr><td style="color:var(--red)">Worst</td><td>Element is last or not present</td><td>n</td><td><span class="badge on">O(n)</span></td></tr>
+    </tbody>
+  </table>
+  <div class="notation"><strong>Space Complexity:</strong> O(1) — No extra memory needed, search happens in-place.</div>
+</div>
+
+<!-- BINARY SEARCH -->
+<div class="page" id="page-binary">
+  <div class="page-title">Binary Search</div>
+  <p class="page-subtitle">A fast search algorithm that works on <strong>sorted arrays</strong> by repeatedly halving the search interval.</p>
+
+  <h2>Key Idea</h2>
+  <p>Binary search uses the fact that the array is sorted. By comparing the target with the middle element, we can eliminate half the search space in each step — giving us O(log n) complexity.</p>
+
+  <h2>Interactive Visualizer</h2>
+  <div class="viz-container">
+    <div class="viz-title">Binary Search Animation</div>
+    <div style="margin-bottom:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <label style="font-size:12px;color:var(--text2)">Search for:</label>
+      <input type="number" id="bs-target" value="15" style="width:70px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);padding:5px 8px;border-radius:5px;font-size:13px">
+    </div>
+    <div class="array-row" id="bs-array"></div>
+    <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:12px;color:var(--blue)">■ Low</span>
+      <span style="font-size:12px;color:var(--pink)">■ Mid</span>
+      <span style="font-size:12px;color:var(--yellow)">■ High</span>
+      <span style="font-size:12px;color:var(--green)">■ Found</span>
+    </div>
+    <div class="status" id="bs-status">Press <strong>Start</strong> to begin binary search</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="bsStart()">▶ Start</button>
+      <button class="btn" onclick="bsReset()">↺ Reset</button>
+      <span class="speed-label">Speed:</span>
+      <input type="range" min="1" max="5" value="2" id="bs-speed">
+    </div>
+  </div>
+
+  <h2>Step-by-Step Algorithm</h2>
+  <ul class="steps-list">
+    <li>Start with low = 0, high = n-1</li>
+    <li>Compute mid = (low + high) / 2</li>
+    <li>If arr[mid] == target → return mid (found!)</li>
+    <li>If target &gt; arr[mid] → low = mid + 1 (search right half)</li>
+    <li>If target &lt; arr[mid] → high = mid - 1 (search left half)</li>
+    <li>Repeat steps 2–5 until low &gt; high (not found)</li>
+  </ul>
+
+  <h2>Pseudocode — Iterative Method</h2>
+  <pre><code><span class="fn">binarySearch</span>(arr, x, low, high)
+  <span class="kw">repeat</span> <span class="kw">until</span> low == high
+    mid = (low + high) / <span class="num">2</span>
+    <span class="kw">if</span> x == arr[mid]
+      <span class="kw">return</span> mid
+    <span class="kw">else if</span> x > arr[mid]   <span class="cm">// x on right side</span>
+      low = mid + <span class="num">1</span>
+    <span class="kw">else</span>                   <span class="cm">// x on left side</span>
+      high = mid - <span class="num">1</span></code></pre>
+
+  <h2>Complexity Analysis</h2>
+  <table class="comp-table">
+    <thead><tr><th>Case</th><th>Scenario</th><th>Time Complexity</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--green)">Best</td><td>Target is the middle element</td><td><span class="badge o1">O(1)</span></td></tr>
+      <tr><td style="color:var(--yellow)">Average</td><td>Target found after a few halvings</td><td><span class="badge ologn">O(log n)</span></td></tr>
+      <tr><td style="color:var(--red)">Worst</td><td>Target is last element or not present</td><td><span class="badge ologn">O(log n)</span></td></tr>
+    </tbody>
+  </table>
+  <div class="notation"><strong>Why O(log n)?</strong> Each step halves the search space: n → n/2 → n/4 → ... → 1. After k steps, n/2ᵏ = 1, so k = log₂n steps maximum.</div>
+</div>
+
+<!-- STACK -->
+<div class="page" id="page-stack">
+  <div class="page-title">Stack (ADT)</div>
+  <p class="page-subtitle">A linear data structure following LIFO (Last In, First Out) — like a pile of plates. Only the top element is accessible.</p>
+
+  <h2>Core Concept</h2>
+  <p>A stack is implemented using arrays or linked lists. All insertions (push) and deletions (pop) happen at one end called the <span class="key-term">TOP</span>. A pointer called TOP tracks the topmost element. Initially TOP = -1 (empty stack).</p>
+
+  <div class="card-grid">
+    <div class="info-card"><h4>push()</h4><p>Increment TOP, place new element at stack[TOP]. Check for overflow before pushing.</p></div>
+    <div class="info-card"><h4>pop()</h4><p>Return stack[TOP] and decrement TOP. Check for underflow before popping.</p></div>
+    <div class="info-card"><h4>peek()</h4><p>Return stack[TOP] without modifying TOP.</p></div>
+    <div class="info-card"><h4>isEmpty()</h4><p>Returns true if TOP == -1.</p></div>
+    <div class="info-card"><h4>isFull()</h4><p>Returns true if TOP == MAXSIZE - 1.</p></div>
+  </div>
+
+  <h2>Interactive Stack Visualizer</h2>
+  <div class="viz-container">
+    <div class="viz-title">Stack Operations</div>
+    <div style="display:flex;gap:16px;margin-bottom:16px;align-items:flex-end;flex-wrap:wrap">
+      <div>
+        <div class="stack-arrow">TOP ↓</div>
+        <div class="stack-viz" id="stack-viz">
+          <div style="text-align:center;color:var(--text3);font-size:12px">Stack is empty (TOP = -1)</div>
+        </div>
+        <div style="border-top:2px solid var(--border2);width:200px;margin:0 auto;padding-top:6px;text-align:center;font-size:11px;color:var(--text3)">Stack base</div>
+      </div>
+      <div style="flex:1;min-width:200px">
+        <div class="status" id="stack-status">Stack is empty (TOP = -1)</div>
+        <div style="margin-top:14px">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:6px">Value to push:</div>
+          <input type="number" id="stack-input" value="10" style="width:80px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);padding:5px 8px;border-radius:5px;font-size:13px;margin-right:8px">
+          <button class="btn primary" onclick="stackPush()" style="margin-right:4px">Push</button>
+          <button class="btn" onclick="stackPop()">Pop</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Pseudocode</h2>
+  <pre><code><span class="cm">// PUSH operation</span>
+<span class="kw">if</span> top == MAXSIZE - <span class="num">1</span>
+  <span class="kw">print</span> <span class="str">"Stack Overflow"</span>
+<span class="kw">else</span>
+  top = top + <span class="num">1</span>
+  stack[top] = data
+
+<span class="cm">// POP operation</span>
+<span class="kw">if</span> top == <span class="num">-1</span>
+  <span class="kw">print</span> <span class="str">"Stack Underflow"</span>
+<span class="kw">else</span>
+  data = stack[top]
+  top = top - <span class="num">1</span>
+  <span class="kw">return</span> data</code></pre>
+
+  <h2>Applications of Stack</h2>
+  <div class="card-grid">
+    <div class="info-card"><h4>Expression Conversion</h4><p>Converting infix expressions (A+B) to postfix (AB+) or prefix (+AB).</p></div>
+    <div class="info-card"><h4>Expression Evaluation</h4><p>Evaluating postfix/prefix expressions using a stack to hold operands.</p></div>
+    <div class="info-card"><h4>Function Call Stack</h4><p>Every function call pushes a frame; returning pops it.</p></div>
+    <div class="info-card"><h4>Undo/Redo</h4><p>Text editors maintain an undo stack of operations.</p></div>
+  </div>
+
+  <div class="notation"><strong>Complexity:</strong> Push, Pop, and Peek are all <span class="badge o1">O(1)</span> — the stack only accesses the top element, so no traversal is needed.</div>
+</div>
+
+<!-- QUEUE -->
+<div class="page" id="page-queue">
+  <div class="page-title">Queue (ADT)</div>
+  <p class="page-subtitle">A linear structure following FIFO (First In, First Out) — like people waiting in a queue. Insert at REAR, delete from FRONT.</p>
+
+  <h2>Types of Queues</h2>
+  <div class="card-grid">
+    <div class="info-card" style="border-color:rgba(0,212,255,.3)">
+      <h4>Simple Queue</h4>
+      <p>Basic FIFO. Insert at rear, delete from front. Problem: wasted space after deletions.</p>
+    </div>
+    <div class="info-card" style="border-color:rgba(167,139,250,.3)">
+      <h4>Circular Queue</h4>
+      <p>Last element connected to first — forms a ring. Solves wasted space using modulo arithmetic.</p>
+    </div>
+    <div class="info-card" style="border-color:rgba(251,191,36,.3)">
+      <h4>Priority Queue</h4>
+      <p>Each element has a priority. Higher priority elements are served first, regardless of arrival order.</p>
+    </div>
+  </div>
+
+  <h2>Interactive Queue Visualizer</h2>
+  <div class="viz-container">
+    <div class="viz-title">Queue Operations (FIFO)</div>
+    <div class="queue-viz" id="queue-viz">
+      <div style="color:var(--text3);font-size:12px">Queue is empty</div>
+    </div>
+    <div id="queue-pointers" style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"></div>
+    <div class="status" id="queue-status">Queue is empty. Enqueue some elements.</div>
+    <div class="viz-controls">
+      <input type="number" id="queue-input" value="A" style="width:60px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);padding:5px 8px;border-radius:5px;font-size:13px">
+      <button class="btn primary" onclick="queueEnqueue()">Enqueue</button>
+      <button class="btn" onclick="queueDequeue()">Dequeue</button>
+      <button class="btn" onclick="queueReset()">↺ Reset</button>
+    </div>
+  </div>
+
+  <h2>Circular Queue — How It Works</h2>
+  <p>A normal queue wastes space after elements are dequeued. The circular queue solves this by treating the array as circular using modulo:</p>
+  <pre><code><span class="cm">// Circular enqueue</span>
+<span class="kw">if</span> (REAR + <span class="num">1</span>) % SIZE == FRONT
+  <span class="kw">print</span> <span class="str">"Queue is full"</span>
+<span class="kw">else</span>
+  REAR = (REAR + <span class="num">1</span>) % SIZE
+  queue[REAR] = data</code></pre>
+
+  <h2>Priority Queue</h2>
+  <p>In a priority queue, elements are served based on their <span class="key-term">priority value</span>, not arrival order. Elements with equal priority are served in FIFO order. Best implemented using a <span class="key-term">heap data structure</span>.</p>
+
+  <div class="notation"><strong>Applications:</strong> CPU task scheduling, call center phone systems (queues), handling real-time system interrupts (first come, first served), printer job queues.</div>
+</div>
+
+<!-- LINKED LIST -->
+<div class="page" id="page-linkedlist">
+  <div class="page-title">Linked List</div>
+  <p class="page-subtitle">A linear data structure where elements (nodes) are stored at non-contiguous memory locations, linked via pointers.</p>
+
+  <h2>Node Structure</h2>
+  <p>Each node contains two parts: <span class="key-term">Data</span> (the value stored) and <span class="key-term">Next</span> (a pointer/reference to the next node). The last node's Next pointer is NULL.</p>
+
+  <div class="viz-container">
+    <div class="viz-title">Singly Linked List</div>
+    <div class="ll-row" id="ll-display"></div>
+    <div class="status" id="ll-status">Interactive linked list — add and delete nodes</div>
+    <div class="viz-controls">
+      <input type="text" id="ll-input" value="50" style="width:60px;background:var(--bg4);border:1px solid var(--border2);color:var(--text);padding:5px 8px;border-radius:5px;font-size:13px">
+      <button class="btn primary" onclick="llAddFront()">Add Front</button>
+      <button class="btn" onclick="llAddEnd()">Add End</button>
+      <button class="btn" onclick="llDelete()">Delete Head</button>
+      <button class="btn" onclick="llReset()">↺ Reset</button>
+    </div>
+  </div>
+
+  <h2>Types of Linked Lists</h2>
+  <div class="card-grid">
+    <div class="info-card">
+      <h4>Singly Linked List</h4>
+      <p>Each node points to the next. Traversal is unidirectional (head → tail). Most basic type.</p>
+    </div>
+    <div class="info-card">
+      <h4>Doubly Linked List</h4>
+      <p>Each node has both Next and Prev pointers. Traversal in both directions. Needs extra memory.</p>
+    </div>
+    <div class="info-card">
+      <h4>Circular Linked List</h4>
+      <p>Last node's Next points back to the Head. Forms a cycle. Useful in round-robin scheduling.</p>
+    </div>
+    <div class="info-card">
+      <h4>Circular Doubly</h4>
+      <p>Combination — doubly linked and circular. Most flexible, most complex.</p>
+    </div>
+  </div>
+
+  <h2>Array vs Linked List</h2>
+  <table class="comp-table">
+    <thead><tr><th>Feature</th><th>Array</th><th>Linked List</th></tr></thead>
+    <tbody>
+      <tr><td>Memory</td><td>Contiguous (fixed block)</td><td>Scattered (dynamic)</td></tr>
+      <tr><td>Size</td><td>Fixed at compile time</td><td>Dynamic (grows/shrinks)</td></tr>
+      <tr><td>Access</td><td>O(1) — direct by index</td><td>O(n) — must traverse</td></tr>
+      <tr><td>Insertion</td><td>O(n) — shift elements</td><td>O(1) — update pointer</td></tr>
+      <tr><td>Deletion</td><td>O(n) — shift elements</td><td>O(1) — update pointer</td></tr>
+      <tr><td>Cache</td><td>Better (contiguous)</td><td>Worse (scattered)</td></tr>
+      <tr><td>Memory use</td><td>Less (data only)</td><td>More (data + pointer)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Operations on Linked List</h2>
+  <ul class="steps-list">
+    <li><strong>Add to beginning:</strong> Allocate new node → Store data → Set new.next = head → Set head = new node</li>
+    <li><strong>Add to end:</strong> Allocate new node → Traverse to last node → Set last.next = new node</li>
+    <li><strong>Add to middle:</strong> Traverse to position → Update pointers to include new node between existing nodes</li>
+    <li><strong>Delete from beginning:</strong> Set head = head.next → Free old head</li>
+    <li><strong>Delete from end:</strong> Traverse to second-last → Set its next = NULL</li>
+    <li><strong>Delete from middle:</strong> Traverse to node before target → Update pointer to skip target node</li>
+  </ul>
+</div>
+
+<!-- TREES -->
+<div class="page" id="page-trees">
+  <div class="page-title">Trees — Basic Properties</div>
+  <p class="page-subtitle">A non-linear, hierarchical data structure — unlike arrays and linked lists which are linear and have only one path through them.</p>
+
+  <h2>Why Non-Linear?</h2>
+  <p>Tree data is arranged on multiple levels (hierarchy). Each node can have multiple children. There is exactly one path from the root to any other node.</p>
+
+  <h2>Key Terminology</h2>
+  <div class="card-grid">
+    <div class="info-card"><h4>Root Node</h4><p>Topmost node, no parent. Every non-empty tree has exactly one root.</p></div>
+    <div class="info-card"><h4>Parent Node</h4><p>A node that has one or more children. B is the parent of D and E.</p></div>
+    <div class="info-card"><h4>Child Node</h4><p>Immediate successor of a parent. D and E are children of B.</p></div>
+    <div class="info-card"><h4>Leaf Node</h4><p>External node with no children. Also called a terminal node.</p></div>
+    <div class="info-card"><h4>Sibling</h4><p>Children of the same parent. D and E are siblings.</p></div>
+    <div class="info-card"><h4>Subtree</h4><p>A node and all its descendants form a subtree.</p></div>
+    <div class="info-card"><h4>Depth</h4><p>Number of edges from root to that node. Root has depth 0.</p></div>
+    <div class="info-card"><h4>Height</h4><p>Longest path from node to any leaf. Height of tree = height of root.</p></div>
+    <div class="info-card"><h4>Degree</h4><p>Number of children a node has. Degree of a leaf = 0.</p></div>
+  </div>
+
+  <h2>Tree Traversals</h2>
+  <p>Unlike linear structures, trees can be traversed in different ways. The three standard traversals for binary trees:</p>
+  <div class="card-grid">
+    <div class="info-card" style="border-color:rgba(0,212,255,.3)">
+      <h4>Inorder (LNR)</h4>
+      <p>1. Traverse left subtree<br>2. Visit root node<br>3. Traverse right subtree</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--blue)">For BST: gives elements in sorted order!</p>
+    </div>
+    <div class="info-card" style="border-color:rgba(167,139,250,.3)">
+      <h4>Preorder (NLR)</h4>
+      <p>1. Visit root node<br>2. Traverse left subtree<br>3. Traverse right subtree</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--purple)">Used to copy a tree structure</p>
+    </div>
+    <div class="info-card" style="border-color:rgba(251,191,36,.3)">
+      <h4>Postorder (LRN)</h4>
+      <p>1. Traverse left subtree<br>2. Traverse right subtree<br>3. Visit root node</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--yellow)">Used to delete a tree</p>
+    </div>
+  </div>
+
+  <div class="notation">
+    <strong>Properties:</strong> A tree with N nodes has exactly <strong>N-1 edges</strong>. There is only one path between any two nodes.
+  </div>
+</div>
+
+<!-- BST -->
+<div class="page" id="page-bst">
+  <div class="page-title">Binary Search Tree (BST)</div>
+  <p class="page-subtitle">A binary tree where: left child &lt; parent &lt; right child. This ordering enables efficient search, insert, and delete operations.</p>
+
+  <h2>BST Property</h2>
+  <p>For every node N in a BST: all values in the left subtree are less than N, and all values in the right subtree are greater than N. This property holds recursively for all subtrees.</p>
+
+  <div class="notation"><strong>Important:</strong> BST does <em>not</em> allow duplicate values. Binary Tree allows duplicates, BST does not.</div>
+
+  <h2>BST Operations</h2>
+  <div class="card-grid">
+    <div class="info-card">
+      <h4>Search</h4>
+      <p>Compare target with root. If less → go left. If greater → go right. Repeat until found or NULL.</p>
+    </div>
+    <div class="info-card">
+      <h4>Insertion</h4>
+      <p>Always inserted at a leaf. Navigate left/right until an empty spot is found, then insert.</p>
+    </div>
+    <div class="info-card">
+      <h4>Deletion (Leaf)</h4>
+      <p>Simply set parent's pointer to NULL and free the node.</p>
+    </div>
+    <div class="info-card">
+      <h4>Deletion (One Child)</h4>
+      <p>Replace node with its child. Parent now points directly to grandchild.</p>
+    </div>
+    <div class="info-card">
+      <h4>Deletion (Two Children)</h4>
+      <p>Replace with inorder successor (smallest in right subtree) or inorder predecessor.</p>
+    </div>
+  </div>
+
+  <h2>Building a BST — Example</h2>
+  <p>Insert: 45, 15, 79, 90, 10, 55, 12, 20, 50</p>
+  <div class="viz-container">
+    <div class="viz-title">BST Visualization</div>
+    <svg class="tree-svg" viewBox="0 0 700 320" id="bst-svg" height="300">
+      <!-- Tree structure for 45,15,79,90,10,55,12,20,50 -->
+      <defs><marker id="ta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 2L8 5L2 8" fill="none" stroke="#444" stroke-width="1.5"/></marker></defs>
+      <!-- Edges -->
+      <line x1="350" y1="46" x2="210" y2="106" stroke="#333" stroke-width="1.5"/>
+      <line x1="350" y1="46" x2="490" y2="106" stroke="#333" stroke-width="1.5"/>
+      <line x1="210" y1="126" x2="140" y2="186" stroke="#333" stroke-width="1.5"/>
+      <line x1="210" y1="126" x2="280" y2="186" stroke="#333" stroke-width="1.5"/>
+      <line x1="490" y1="126" x2="440" y2="186" stroke="#333" stroke-width="1.5"/>
+      <line x1="490" y1="126" x2="560" y2="186" stroke="#333" stroke-width="1.5"/>
+      <line x1="140" y1="206" x2="110" y2="266" stroke="#333" stroke-width="1.5"/>
+      <line x1="140" y1="206" x2="170" y2="266" stroke="#333" stroke-width="1.5"/>
+      <line x1="440" y1="206" x2="410" y2="266" stroke="#333" stroke-width="1.5"/>
+      <!-- Nodes -->
+      <g><circle cx="350" cy="36" r="24" fill="#1a1a2e" stroke="#00d4ff" stroke-width="1.5"/><text x="350" y="41" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="600">45</text></g>
+      <g><circle cx="210" cy="116" r="22" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="210" y="121" text-anchor="middle" fill="#aaa" font-size="13" font-weight="600">15</text></g>
+      <g><circle cx="490" cy="116" r="22" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="490" y="121" text-anchor="middle" fill="#aaa" font-size="13" font-weight="600">79</text></g>
+      <g><circle cx="140" cy="196" r="20" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="140" y="201" text-anchor="middle" fill="#aaa" font-size="12" font-weight="600">10</text></g>
+      <g><circle cx="280" cy="196" r="20" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="280" y="201" text-anchor="middle" fill="#aaa" font-size="12" font-weight="600">20</text></g>
+      <g><circle cx="440" cy="196" r="20" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="440" y="201" text-anchor="middle" fill="#aaa" font-size="12" font-weight="600">55</text></g>
+      <g><circle cx="560" cy="196" r="20" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="560" y="201" text-anchor="middle" fill="#aaa" font-size="12" font-weight="600">90</text></g>
+      <g><circle cx="110" cy="276" r="18" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="110" y="281" text-anchor="middle" fill="#aaa" font-size="11" font-weight="600">—</text></g>
+      <g><circle cx="170" cy="276" r="18" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="170" y="281" text-anchor="middle" fill="#aaa" font-size="11" font-weight="600">12</text></g>
+      <g><circle cx="410" cy="276" r="18" fill="#1a1a1a" stroke="#444" stroke-width="1"/><text x="410" y="281" text-anchor="middle" fill="#aaa" font-size="11" font-weight="600">50</text></g>
+    </svg>
+    <p style="font-size:12px;color:var(--text3);text-align:center;margin-top:8px">Inorder traversal: 10, 12, 15, 20, 45, 50, 55, 79, 90 (sorted!)</p>
+  </div>
+
+  <h2>Complexity Analysis</h2>
+  <table class="comp-table">
+    <thead><tr><th>Operation</th><th>Average Case</th><th>Worst Case</th></tr></thead>
+    <tbody>
+      <tr><td>Search</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge on">O(n)</span></td></tr>
+      <tr><td>Insertion</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge on">O(n)</span></td></tr>
+      <tr><td>Deletion</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge on">O(n)</span></td></tr>
+    </tbody>
+  </table>
+  <div class="notation"><strong>Why O(n) worst case?</strong> If elements are inserted in sorted order (1,2,3,4...), the BST degenerates into a linked list — every node has only a right child.</div>
+</div>
+
+<!-- SORTING OVERVIEW -->
+<div class="page" id="page-sorting">
+  <div class="page-title">Sorting Algorithms Overview</div>
+  <p class="page-subtitle">Sorting is arranging elements in a specific order. Different algorithms suit different situations — understanding their trade-offs is crucial.</p>
+  <table class="comp-table">
+    <thead><tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr></thead>
+    <tbody>
+      <tr><td>Bubble Sort</td><td><span class="badge on">O(n)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge o1">O(1)</span></td><td style="color:var(--green)">Yes</td></tr>
+      <tr><td>Selection Sort</td><td><span class="badge on2">O(n²)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge o1">O(1)</span></td><td style="color:var(--red)">No</td></tr>
+      <tr><td>Insertion Sort</td><td><span class="badge on">O(n)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge on2">O(n²)</span></td><td><span class="badge o1">O(1)</span></td><td style="color:var(--green)">Yes</td></tr>
+      <tr><td>Merge Sort</td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge on">O(n)</span></td><td style="color:var(--green)">Yes</td></tr>
+      <tr><td>Heap Sort</td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge onlogn">O(n log n)</span></td><td><span class="badge o1">O(1)</span></td><td style="color:var(--red)">No</td></tr>
+    </tbody>
+  </table>
+  <div class="notation"><strong>Key insight:</strong> Selection, Bubble, and Insertion sorts are O(n²) — simple but slow for large data. Merge and Heap Sort guarantee O(n log n) — efficient even for large inputs.</div>
+</div>
+
+<!-- BUBBLE SORT -->
+<div class="page" id="page-bubble">
+  <div class="page-title">Bubble Sort</div>
+  <p class="page-subtitle">Repeatedly compare adjacent elements and swap if they're in the wrong order. Largest elements "bubble up" to the end each pass.</p>
+  <h2>Interactive Visualizer</h2>
+  <div class="viz-container">
+    <div class="viz-title">Bubble Sort Animation</div>
+    <div class="bars-container" id="bubble-bars"></div>
+    <div class="status" id="bubble-status">Press Start to animate bubble sort</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="bubbleStart()">▶ Start</button>
+      <button class="btn" onclick="bubbleReset()">↺ Reset</button>
+      <span class="speed-label">Speed: </span>
+      <input type="range" min="1" max="5" value="3" id="bubble-speed">
+    </div>
+  </div>
+  <h2>How It Works</h2>
+  <p>In each pass, compare A[i] with A[i+1]. If A[i] > A[i+1], swap them. After each full pass, the largest unsorted element is in its correct position. After n-1 passes, the array is sorted.</p>
+  <div class="notation"><strong>Worst Case O(n²):</strong> When array is in reverse order — n(n-1)/2 comparisons needed.<br><strong>Best Case O(n):</strong> When array is already sorted (with optimization flag).</div>
+</div>
+
+<!-- SELECTION SORT -->
+<div class="page" id="page-selection">
+  <div class="page-title">Selection Sort</div>
+  <p class="page-subtitle">Find the minimum element in the unsorted portion and place it at the beginning. Repeat for remaining elements.</p>
+  <h2>Interactive Visualizer</h2>
+  <div class="viz-container">
+    <div class="viz-title">Selection Sort Animation</div>
+    <div class="bars-container" id="selection-bars"></div>
+    <div class="status" id="selection-status">Press Start to animate selection sort</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="selectionStart()">▶ Start</button>
+      <button class="btn" onclick="selectionReset()">↺ Reset</button>
+      <span class="speed-label">Speed: </span>
+      <input type="range" min="1" max="5" value="3" id="selection-speed">
+    </div>
+  </div>
+  <h2>How It Works</h2>
+  <p>For position i from 0 to n-1: find the index of minimum value in arr[i..n-1], then swap arr[i] with that minimum. After each iteration, the sorted portion grows by one element.</p>
+  <pre><code><span class="kw">for</span> i = <span class="num">0</span> to n-<span class="num">2</span>:
+  min_idx = i
+  <span class="kw">for</span> j = i+<span class="num">1</span> to n-<span class="num">1</span>:
+    <span class="kw">if</span> arr[j] < arr[min_idx]:
+      min_idx = j
+  swap(arr[i], arr[min_idx])</code></pre>
+  <div class="notation"><strong>Always O(n²):</strong> Selection sort makes n(n-1)/2 comparisons regardless of input order — even if already sorted. Makes minimum number of swaps (O(n)).</div>
+</div>
+
+<!-- INSERTION SORT -->
+<div class="page" id="page-insertion">
+  <div class="page-title">Insertion Sort</div>
+  <p class="page-subtitle">Build a sorted portion one element at a time by inserting each new element into its correct position in the sorted portion.</p>
+  <h2>Interactive Visualizer</h2>
+  <div class="viz-container">
+    <div class="viz-title">Insertion Sort Animation</div>
+    <div class="bars-container" id="insertion-bars"></div>
+    <div class="status" id="insertion-status">Press Start to animate insertion sort</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="insertionStart()">▶ Start</button>
+      <button class="btn" onclick="insertionReset()">↺ Reset</button>
+    </div>
+  </div>
+  <h2>How It Works</h2>
+  <p>Think of sorting playing cards. You pick each card and slide it into its correct position among the already-sorted cards in your hand.</p>
+  <div class="notation"><strong>Best for nearly-sorted arrays:</strong> When data is nearly sorted, insertion sort approaches O(n). Used in practice for small arrays (n &lt; 20) and as a subroutine in more complex sorts.</div>
+</div>
+
+<!-- MERGE SORT -->
+<div class="page" id="page-merge">
+  <div class="page-title">Merge Sort</div>
+  <p class="page-subtitle">Divide and Conquer — recursively split the array in half, sort each half, then merge the two sorted halves.</p>
+  <h2>How It Works</h2>
+  <ul class="steps-list">
+    <li>If array has 0 or 1 element, it's already sorted (base case)</li>
+    <li>Divide array into two halves at midpoint</li>
+    <li>Recursively sort the left half</li>
+    <li>Recursively sort the right half</li>
+    <li>Merge the two sorted halves into one sorted array</li>
+  </ul>
+  <div class="viz-container">
+    <div class="viz-title">Merge Sort — Divide and Merge</div>
+    <div style="font-size:13px;color:var(--text2);line-height:2">
+      <div style="text-align:center;color:var(--blue);font-weight:600;margin-bottom:8px">[38, 27, 43, 3, 9, 82, 10]</div>
+      <div style="display:flex;justify-content:center;gap:20px">
+        <span style="color:var(--purple)">[38, 27, 43]</span>
+        <span style="color:var(--text3)">|</span>
+        <span style="color:var(--teal)">[3, 9, 82, 10]</span>
+      </div>
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:6px">
+        <span style="color:var(--purple)">[38]</span><span>[27, 43]</span>
+        <span style="color:var(--text3)">|</span>
+        <span>[3, 9]</span><span>[82, 10]</span>
+      </div>
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:6px;color:var(--green)">
+        <span>↓ Sort ↓</span>
+      </div>
+      <div style="display:flex;justify-content:center;gap:12px;margin-top:4px">
+        <span style="color:var(--teal)">[27, 38, 43]</span>
+        <span style="color:var(--text3)">+</span>
+        <span style="color:var(--teal)">[3, 9, 10, 82]</span>
+      </div>
+      <div style="text-align:center;margin-top:6px;color:var(--green);font-weight:600">→ [3, 9, 10, 27, 38, 43, 82]</div>
+    </div>
+  </div>
+  <div class="notation"><strong>Guaranteed O(n log n):</strong> Unlike Quicksort, Merge Sort's worst case is always O(n log n). Downside: requires O(n) extra space for merging.</div>
+</div>
+
+<!-- HEAP SORT -->
+<div class="page" id="page-heap">
+  <div class="page-title">Heap Sort</div>
+  <p class="page-subtitle">Uses a Max-Heap data structure. Build a heap, then repeatedly extract the maximum to sort the array.</p>
+  <h2>What is a Max-Heap?</h2>
+  <p>A complete binary tree where every parent node is greater than or equal to its children. The root always contains the maximum element.</p>
+  <h2>Heap Sort Steps</h2>
+  <ul class="steps-list">
+    <li>Build a max-heap from the input array — O(n)</li>
+    <li>The maximum element is at the root (index 0)</li>
+    <li>Swap root with the last element of the heap</li>
+    <li>Reduce heap size by 1 (the last element is now sorted)</li>
+    <li>Heapify the root to restore the max-heap property</li>
+    <li>Repeat steps 3–5 until heap size is 1</li>
+  </ul>
+  <div class="viz-container">
+    <div class="viz-title">Heap Sort Example — arr = {4, 10, 3, 5, 1}</div>
+    <div style="font-size:13px;color:var(--text2);line-height:2">
+      <div><span style="color:var(--text3)">Step 1 — Build Max-Heap:</span> <span style="color:var(--blue)">[4,10,3,5,1] → [10,5,3,4,1]</span></div>
+      <div><span style="color:var(--text3)">Step 2 — Swap root(10) with last(1):</span> <span style="color:var(--purple)">[1,5,3,4, | 10]</span></div>
+      <div><span style="color:var(--text3)">Step 3 — Heapify → [5,4,3,1,|10], swap root(5) with last(1):</span> <span style="color:var(--purple)">[1,4,3,|5,10]</span></div>
+      <div><span style="color:var(--text3)">Continue until:</span> <span style="color:var(--green)">[1, 3, 4, 5, 10] ✓ Sorted!</span></div>
+    </div>
+  </div>
+  <div class="notation"><strong>O(N log N) always:</strong> Building heap is O(n). Each extraction + heapify is O(log n), done n times. Total: O(n log n). Space: O(1) — sorts in-place!</div>
+</div>
+
+<!-- GRAPHS -->
+<div class="page" id="page-graphs">
+  <div class="page-title">Introduction to Graphs</div>
+  <p class="page-subtitle">A non-linear data structure consisting of vertices (nodes) connected by edges (arcs). G = (V, E) where V = vertices, E = edges.</p>
+  <h2>Graph Terminology</h2>
+  <div class="card-grid">
+    <div class="info-card"><h4>Vertex / Node</h4><p>Individual data element of a graph. In G = (V,E), A, B, C, D are vertices.</p></div>
+    <div class="info-card"><h4>Edge / Arc</h4><p>Connection between two vertices. Represented as (A, B) — a link from A to B.</p></div>
+    <div class="info-card"><h4>Degree</h4><p>Total number of edges connected to a vertex.</p></div>
+    <div class="info-card"><h4>Indegree</h4><p>Number of incoming edges to a vertex (directed graphs).</p></div>
+    <div class="info-card"><h4>Outdegree</h4><p>Number of outgoing edges from a vertex (directed graphs).</p></div>
+    <div class="info-card"><h4>Path</h4><p>A sequence of alternate vertices and edges from one vertex to another.</p></div>
+    <div class="info-card"><h4>Adjacent</h4><p>Two vertices are adjacent if there is a direct edge between them.</p></div>
+    <div class="info-card"><h4>Self-loop</h4><p>An edge where both endpoints are the same vertex.</p></div>
+  </div>
+  <h2>Types of Graphs</h2>
+  <div class="card-grid">
+    <div class="info-card"><h4>Undirected Graph</h4><p>Edges have no direction. If edge (A,B) exists, you can go from A→B and B→A.</p></div>
+    <div class="info-card"><h4>Directed Graph (Digraph)</h4><p>Edges have direction. Edge (A,B) means A→B only, not B→A.</p></div>
+    <div class="info-card"><h4>Weighted Graph</h4><p>Each edge has a weight/cost associated with it (e.g. road distances).</p></div>
+    <div class="info-card"><h4>Simple Graph</h4><p>No parallel edges, no self-loops.</p></div>
+  </div>
+</div>
+
+<!-- BFS DFS -->
+<div class="page" id="page-bfsdfs">
+  <div class="page-title">BFS & DFS Graph Traversals</div>
+  <p class="page-subtitle">Two fundamental strategies to visit all vertices in a graph — both essential for solving graph problems.</p>
+  <div class="card-grid">
+    <div class="info-card" style="border-color:rgba(0,212,255,.3)">
+      <h4 style="color:var(--blue)">BFS — Breadth-First Search</h4>
+      <p>Visit all neighbors of a vertex before going deeper. Uses a <strong>Queue</strong>. Explores level by level.</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--blue)">Application: Shortest path in unweighted graphs</p>
+    </div>
+    <div class="info-card" style="border-color:rgba(167,139,250,.3)">
+      <h4 style="color:var(--purple)">DFS — Depth-First Search</h4>
+      <p>Go as deep as possible before backtracking. Uses a <strong>Stack</strong> (or recursion). Explores branch by branch.</p>
+      <p style="margin-top:8px;font-size:12px;color:var(--purple)">Application: Cycle detection, topological sort</p>
+    </div>
+  </div>
+  <h2>BFS Algorithm</h2>
+  <ul class="steps-list">
+    <li>Start at source vertex, mark it visited, add to Queue</li>
+    <li>While Queue is not empty: dequeue a vertex v</li>
+    <li>Visit all unvisited neighbors of v</li>
+    <li>Mark each neighbor visited and enqueue it</li>
+    <li>Repeat until Queue is empty</li>
+  </ul>
+  <h2>DFS Algorithm</h2>
+  <ul class="steps-list">
+    <li>Start at root/arbitrary node, mark it visited</li>
+    <li>Move to an adjacent unvisited node, mark it visited</li>
+    <li>Continue until no unvisited adjacent nodes exist</li>
+    <li>Backtrack to the previous node, check for other unvisited neighbors</li>
+    <li>Repeat until all nodes are visited</li>
+  </ul>
+  <div class="notation">
+    <strong>Key Difference:</strong> BFS uses a Queue → explores in rings outward from source. DFS uses a Stack → goes deep into one branch before trying others.<br><br>
+    <strong>Complexity (both):</strong> Time O(V+E), Space O(V) where V = vertices, E = edges.
+  </div>
+</div>
+
+</main>
+
+<script>
+// ==================== NAV ====================
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  // init vizualizers
+  if(id==='linear') lsInit();
+  if(id==='binary') bsInit();
+  if(id==='stack') stackInit();
+  if(id==='queue') queueInit();
+  if(id==='linkedlist') llInit();
+  if(id==='bubble') bubbleInit();
+  if(id==='selection') selectionInit();
+  if(id==='insertion') insertionInit();
+}
+
+// ==================== HELPERS ====================
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function getSpeed(id){
+  const el=document.getElementById(id);
+  const v=el?parseInt(el.value):3;
+  document.getElementById(id+'-val')&&(document.getElementById(id+'-val').textContent=v+'x');
+  return 1000/v;
+}
+
+// ==================== LINEAR SEARCH ====================
+let lsArr=[10,50,30,70,35,60,20,90,40];let lsRunning=false;
+function lsInit(){
+  lsRunning=false;
+  const c=document.getElementById('ls-array');if(!c)return;
+  c.innerHTML='';
+  lsArr.forEach((v,i)=>{
+    const cell=document.createElement('div');cell.className='arr-cell';cell.id='ls-'+i;
+    cell.innerHTML=`<div class="arr-val">${v}</div><div class="arr-idx">${i}</div>`;
+    c.appendChild(cell);
+  });
+  document.getElementById('ls-status').innerHTML='Press <strong>Start</strong> to begin search';
+}
+async function lsStart(){
+  if(lsRunning)return;lsRunning=true;
+  lsInit();
+  const target=parseInt(document.getElementById('ls-target').value);
+  const status=document.getElementById('ls-status');
+  for(let i=0;i<lsArr.length;i++){
+    if(!lsRunning)return;
+    document.querySelectorAll('#ls-array .arr-cell').forEach(c=>c.classList.remove('active','found'));
+    document.getElementById('ls-'+i).classList.add('active');
+    status.innerHTML=`<span class="step">Step ${i+1}:</span> Checking index ${i} → value ${lsArr[i]} == ${target}? ${lsArr[i]==target?'✅ Found!':'❌ No'}`;
+    await sleep(getSpeed('ls-speed'));
+    if(lsArr[i]===target){
+      document.getElementById('ls-'+i).classList.remove('active');
+      document.getElementById('ls-'+i).classList.add('found');
+      status.innerHTML=`<span class="step">Found!</span> ${target} is at index ${i} after ${i+1} comparisons`;
+      lsRunning=false;return;
+    }
+  }
+  status.innerHTML=`<span style="color:var(--red)">Not found.</span> ${target} is not in the array. ${lsArr.length} comparisons made.`;
+  lsRunning=false;
+}
+function lsReset(){lsRunning=false;lsInit();}
+
+// ==================== BINARY SEARCH ====================
+let bsArr=[3,10,15,20,35,40,60];let bsRunning=false;
+function bsInit(){
+  bsRunning=false;
+  const c=document.getElementById('bs-array');if(!c)return;
+  c.innerHTML='';
+  bsArr.forEach((v,i)=>{
+    const cell=document.createElement('div');cell.className='arr-cell';cell.id='bs-'+i;
+    cell.innerHTML=`<div class="arr-val">${v}</div><div class="arr-idx">${i}</div>`;
+    c.appendChild(cell);
+  });
+  document.getElementById('bs-status').innerHTML='Press <strong>Start</strong> to begin binary search';
+}
+async function bsStart(){
+  if(bsRunning)return;bsRunning=true;
+  bsInit();
+  const target=parseInt(document.getElementById('bs-target').value);
+  const status=document.getElementById('bs-status');
+  let lo=0,hi=bsArr.length-1,step=0;
+  while(lo<=hi){
+    if(!bsRunning)return;
+    step++;
+    const mid=Math.floor((lo+hi)/2);
+    document.querySelectorAll('#bs-array .arr-cell').forEach((c,i)=>{
+      c.classList.remove('active','found','mid','pivot');
+      if(i<lo||i>hi) c.style.opacity='0.3';
+      else c.style.opacity='1';
+    });
+    document.getElementById('bs-'+lo)&&document.getElementById('bs-'+lo).classList.add('active');
+    document.getElementById('bs-'+hi)&&document.getElementById('bs-'+hi).classList.add('comparing');
+    document.getElementById('bs-'+mid).classList.add('mid');
+    status.innerHTML=`<span class="step">Step ${step}:</span> low=${lo}, high=${hi}, mid=${mid} → arr[${mid}]=${bsArr[mid]} vs ${target}`;
+    await sleep(getSpeed('bs-speed')*1.5);
+    if(bsArr[mid]===target){
+      document.getElementById('bs-'+mid).classList.remove('mid');
+      document.getElementById('bs-'+mid).classList.add('found');
+      status.innerHTML=`<span class="step">Found!</span> ${target} at index ${mid} in ${step} steps`;
+      bsRunning=false;return;
+    } else if(bsArr[mid]<target){
+      status.innerHTML=`<span class="step">Step ${step}:</span> ${bsArr[mid]} < ${target} → search right half`;
+      lo=mid+1;
+    } else {
+      status.innerHTML=`<span class="step">Step ${step}:</span> ${bsArr[mid]} > ${target} → search left half`;
+      hi=mid-1;
+    }
+    await sleep(getSpeed('bs-speed'));
+  }
+  status.innerHTML=`<span style="color:var(--red)">Not found.</span> ${target} is not in the sorted array. ${step} steps taken.`;
+  bsRunning=false;
+}
+function bsReset(){bsRunning=false;bsInit();}
+
+// ==================== STACK ====================
+let stackData=[];
+function stackInit(){stackData=[];renderStack();}
+function renderStack(){
+  const viz=document.getElementById('stack-viz');if(!viz)return;
+  const status=document.getElementById('stack-status');
+  if(stackData.length===0){
+    viz.innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;align-self:center">Stack is empty (TOP = -1)</div>';
+    status.textContent='Stack is empty (TOP = -1)';
+    return;
+  }
+  viz.innerHTML='';
+  stackData.forEach((v,i)=>{
+    const frame=document.createElement('div');
+    frame.className='stack-frame'+(i===stackData.length-1?' new top-frame':'');
+    frame.textContent=v;
+    viz.appendChild(frame);
+  });
+  status.textContent=`TOP = ${stackData.length-1} | Elements: [${stackData.join(', ')}]`;
+}
+function stackPush(){
+  if(stackData.length>=6){document.getElementById('stack-status').textContent='Stack Overflow! Max size reached.';return;}
+  const val=document.getElementById('stack-input').value||'?';
+  stackData.push(val);renderStack();
+  document.getElementById('stack-input').value=parseInt(val)+5||'?';
+}
+function stackPop(){
+  if(stackData.length===0){document.getElementById('stack-status').textContent='Stack Underflow! Cannot pop from empty stack.';return;}
+  const popped=stackData.pop();
+  document.getElementById('stack-status').textContent=`Popped: ${popped} | Remaining: [${stackData.join(', ')}]`;
+  renderStack();
+}
+
+// ==================== QUEUE ====================
+let queueData=[];let queueCounter=65;
+function queueInit(){queueData=[];queueCounter=65;renderQueue();}
+function renderQueue(){
+  const viz=document.getElementById('queue-viz');if(!viz)return;
+  const ptrs=document.getElementById('queue-pointers');
+  const status=document.getElementById('queue-status');
+  if(queueData.length===0){
+    viz.innerHTML='<div style="color:var(--text3);font-size:12px">Queue is empty</div>';
+    ptrs.innerHTML='';
+    status.textContent='Queue is empty. Enqueue some elements.';
+    return;
+  }
+  viz.innerHTML='';
+  queueData.forEach((v,i)=>{
+    const cell=document.createElement('div');
+    cell.className='queue-cell'+(i===0?' front':i===queueData.length-1?' rear':'');
+    cell.innerHTML=`<div>${v}</div><div class="queue-label">${i===0?'FRONT':i===queueData.length-1?'REAR':i}</div>`;
+    viz.appendChild(cell);
+  });
+  ptrs.innerHTML=`<span class="pointer ptr-front">FRONT=${0}</span><span class="pointer ptr-rear">REAR=${queueData.length-1}</span>`;
+  status.textContent=`Size: ${queueData.length} | Front: ${queueData[0]} | Rear: ${queueData[queueData.length-1]}`;
+}
+function queueEnqueue(){
+  if(queueData.length>=7){document.getElementById('queue-status').textContent='Queue Overflow!';return;}
+  const val=document.getElementById('queue-input').value||String.fromCharCode(queueCounter++);
+  queueData.push(val);renderQueue();
+}
+function queueDequeue(){
+  if(queueData.length===0){document.getElementById('queue-status').textContent='Queue Underflow! Cannot dequeue.';return;}
+  const removed=queueData.shift();
+  document.getElementById('queue-status').textContent=`Dequeued: ${removed}`;
+  renderQueue();
+}
+function queueReset(){queueInit();}
+
+// ==================== LINKED LIST ====================
+let llData=[10,20,30,40];
+function llInit(){llData=[10,20,30,40];renderLL();}
+function renderLL(){
+  const display=document.getElementById('ll-display');if(!display)return;
+  display.innerHTML='';
+  if(llData.length===0){display.innerHTML='<span style="color:var(--text3);font-size:13px">List is empty (HEAD = NULL)</span>';return;}
+  llData.forEach((v,i)=>{
+    const node=document.createElement('span');node.className='ll-node';
+    node.innerHTML=`<span class="ll-data">${v}</span><span class="ll-next">next→</span>`;
+    display.appendChild(node);
+    const arrow=document.createElement('span');arrow.className='ll-arrow';arrow.textContent='→';
+    display.appendChild(arrow);
+  });
+  const nullSpan=document.createElement('span');nullSpan.className='ll-null';nullSpan.textContent='NULL';
+  display.appendChild(nullSpan);
+  document.getElementById('ll-status').textContent=`Head → ${llData[0]} | Size: ${llData.length} nodes`;
+}
+function llAddFront(){
+  const v=parseInt(document.getElementById('ll-input').value)||99;
+  llData.unshift(v);
+  document.getElementById('ll-status').textContent=`Added ${v} at front → New Head: ${v}`;
+  renderLL();
+}
+function llAddEnd(){
+  const v=parseInt(document.getElementById('ll-input').value)||99;
+  llData.push(v);
+  document.getElementById('ll-status').textContent=`Added ${v} at end → Tail: ${v}`;
+  renderLL();
+}
+function llDelete(){
+  if(llData.length===0){document.getElementById('ll-status').textContent='List is empty!';return;}
+  const removed=llData.shift();
+  document.getElementById('ll-status').textContent=`Deleted head: ${removed} | New Head: ${llData[0]||'NULL'}`;
+  renderLL();
+}
+function llReset(){llInit();}
+
+// ==================== SORTING HELPERS ====================
+function makeBars(arrData,containerId){
+  const c=document.getElementById(containerId);if(!c)return;
+  c.innerHTML='';
+  const max=Math.max(...arrData);
+  arrData.forEach((v,i)=>{
+    const bar=document.createElement('div');
+    bar.className='sort-bar normal';bar.id=containerId+'-bar-'+i;
+    bar.style.height=Math.round((v/max)*110)+'px';
+    bar.textContent=v;
+    c.appendChild(bar);
+  });
+}
+function setBarClass(containerId,i,cls){
+  const el=document.getElementById(containerId+'-bar-'+i);
+  if(el){el.className='sort-bar '+cls;}
+}
+
+// ==================== BUBBLE SORT ====================
+let bubbleArr=[64,34,25,12,22,11,90];let bubbleRunning=false;
+function bubbleInit(){bubbleRunning=false;makeBars(bubbleArr,'bubble-bars');document.getElementById('bubble-status').textContent='Press Start to animate bubble sort';}
+async function bubbleStart(){
+  if(bubbleRunning)return;bubbleRunning=true;
+  let arr=[...bubbleArr];const n=arr.length;
+  const status=document.getElementById('bubble-status');
+  for(let i=0;i<n-1;i++){
+    for(let j=0;j<n-i-1;j++){
+      if(!bubbleRunning)return;
+      setBarClass('bubble-bars',j,'comparing');
+      setBarClass('bubble-bars',j+1,'comparing');
+      status.textContent=`Pass ${i+1}: Comparing ${arr[j]} and ${arr[j+1]}`;
+      await sleep(getSpeed('bubble-speed'));
+      if(arr[j]>arr[j+1]){
+        setBarClass('bubble-bars',j,'swapping');
+        setBarClass('bubble-bars',j+1,'swapping');
+        status.textContent=`Swapping ${arr[j]} ↔ ${arr[j+1]}`;
+        [arr[j],arr[j+1]]=[arr[j+1],arr[j]];
+        makeBars(arr,'bubble-bars');
+        setBarClass('bubble-bars',j,'swapping');
+        setBarClass('bubble-bars',j+1,'swapping');
+        await sleep(getSpeed('bubble-speed'));
+      }
+      setBarClass('bubble-bars',j,'normal');
+      setBarClass('bubble-bars',j+1,'normal');
+    }
+    setBarClass('bubble-bars',n-1-i,'sorted');
+  }
+  setBarClass('bubble-bars',0,'sorted');
+  status.textContent='Sorted! ✅ '+arr.join(', ');
+  bubbleRunning=false;
+}
+function bubbleReset(){bubbleRunning=false;bubbleInit();}
+
+// ==================== SELECTION SORT ====================
+let selectionArr=[64,25,12,22,11];let selectionRunning=false;
+function selectionInit(){selectionRunning=false;makeBars(selectionArr,'selection-bars');document.getElementById('selection-status').textContent='Press Start to animate selection sort';}
+async function selectionStart(){
+  if(selectionRunning)return;selectionRunning=true;
+  let arr=[...selectionArr];const n=arr.length;
+  const status=document.getElementById('selection-status');
+  for(let i=0;i<n-1;i++){
+    let minIdx=i;
+    setBarClass('selection-bars',i,'pivot');
+    for(let j=i+1;j<n;j++){
+      if(!selectionRunning)return;
+      setBarClass('selection-bars',j,'comparing');
+      status.textContent=`Pass ${i+1}: Comparing arr[${j}]=${arr[j]} with current min arr[${minIdx}]=${arr[minIdx]}`;
+      await sleep(getSpeed('selection-speed'));
+      if(arr[j]<arr[minIdx]){
+        if(minIdx!==i)setBarClass('selection-bars',minIdx,'normal');
+        minIdx=j;setBarClass('selection-bars',j,'pivot');
+      } else {setBarClass('selection-bars',j,'normal');}
+    }
+    if(minIdx!==i){
+      status.textContent=`Swapping min ${arr[minIdx]} with position ${i} (${arr[i]})`;
+      [arr[i],arr[minIdx]]=[arr[minIdx],arr[i]];
+      makeBars(arr,'selection-bars');
+      setBarClass('selection-bars',minIdx,'swapping');
+      await sleep(getSpeed('selection-speed'));
+    }
+    setBarClass('selection-bars',i,'sorted');
+    setBarClass('selection-bars',minIdx,'normal');
+  }
+  setBarClass('selection-bars',n-1,'sorted');
+  status.textContent='Sorted! ✅ '+arr.join(', ');
+  selectionRunning=false;
+}
+function selectionReset(){selectionRunning=false;selectionInit();}
+
+// ==================== INSERTION SORT ====================
+let insertionArr=[12,11,13,5,6];let insertionRunning=false;
+function insertionInit(){insertionRunning=false;makeBars(insertionArr,'insertion-bars');document.getElementById('insertion-status').textContent='Press Start to animate insertion sort';}
+async function insertionStart(){
+  if(insertionRunning)return;insertionRunning=true;
+  let arr=[...insertionArr];const n=arr.length;
+  const status=document.getElementById('insertion-status');
+  setBarClass('insertion-bars',0,'sorted');
+  for(let i=1;i<n;i++){
+    if(!insertionRunning)return;
+    let key=arr[i];let j=i-1;
+    setBarClass('insertion-bars',i,'comparing');
+    status.textContent=`Inserting ${key} into sorted portion [${arr.slice(0,i).join(', ')}]`;
+    await sleep(getSpeed('insertion-speed')||500);
+    while(j>=0&&arr[j]>key){
+      if(!insertionRunning)return;
+      arr[j+1]=arr[j];
+      setBarClass('insertion-bars',j,'swapping');
+      setBarClass('insertion-bars',j+1,'swapping');
+      makeBars(arr,'insertion-bars');
+      setBarClass('insertion-bars',j,'swapping');
+      status.textContent=`Shifting ${arr[j]} right to make room for ${key}`;
+      await sleep(getSpeed('insertion-speed')||500);
+      j--;
+    }
+    arr[j+1]=key;
+    makeBars(arr,'insertion-bars');
+    for(let k=0;k<=i;k++) setBarClass('insertion-bars',k,'sorted');
+  }
+  status.textContent='Sorted! ✅ '+arr.join(', ');
+  insertionRunning=false;
+}
+function insertionReset(){insertionRunning=false;insertionInit();}
+
+// Speed slider sync
+document.querySelectorAll('input[type=range]').forEach(el=>{
+  if(el.nextElementSibling&&el.nextElementSibling.classList.contains('speed-label')){
+    el.addEventListener('input',()=>el.nextElementSibling.textContent=el.value+'x');
+  }
+});
+
+// Init on load
+lsInit();
+</script>
+</body>
+</html>
