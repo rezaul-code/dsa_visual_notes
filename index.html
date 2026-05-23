@@ -225,16 +225,21 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--blue)}
 
 #sidebar{
     width:100%;min-width:unset;
-    border-right:none;border-bottom:1px solid var(--border2);
+    border-right:none;
     overflow-y:visible;overflow-x:hidden;
     max-height:52px;transition:max-height .3s ease;
     position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bg2)
   }
-  #sidebar.open{max-height:100vh;overflow-y:auto}
+  #sidebar.open{
+    max-height:100vh;overflow-y:auto;
+    border-bottom:1px solid var(--border2);
+  }
 
   #logo{
     display:flex;align-items:center;justify-content:space-between;
-    padding:10px 14px;cursor:pointer
+    padding:10px 14px;cursor:pointer;
+    position:sticky;top:0;background:var(--bg2);z-index:101;
+    border-bottom:1px solid var(--border2);
   }
   #logo h1{font-size:14px}
   #logo p, #logo .goal{display:none}
@@ -249,7 +254,7 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--blue)}
   .nav-label{padding:4px 14px 2px}
   .nav-item{padding:10px 14px;font-size:13px}
 
-  #main{overflow-y:auto;height:auto}
+  #main{overflow-y:auto;height:auto;margin-top:52px}
   #progress-bar{position:relative}
 
   .page{padding:20px 16px 40px}
