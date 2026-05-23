@@ -459,6 +459,95 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--blue)}
   </div>
 
   <div class="note"><strong>Time-Space Tradeoff:</strong> Often you can reduce time at the cost of more memory, or save memory at the cost of slower execution. Choosing the right data structure means finding the best balance for your problem.</div>
+
+  <h2>Practice Problems</h2>
+
+  <h3>🟢 Beginner — P1: Count Elements</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>Given an array of integers, count how many elements are greater than a given value X.</p>
+  </div>
+  <pre><code><span class="cm">// Input:  arr = [3, 7, 1, 9, 4, 6], X = 5</span>
+<span class="cm">// Output: 3  (elements 7, 9, 6 are > 5)</span>
+
+<span class="fn">countGreater</span>(arr, n, X):
+  count = <span class="num">0</span>
+  <span class="kw">for</span> i = <span class="num">0</span> to n-<span class="num">1</span>:
+    <span class="kw">if</span> arr[i] > X:
+      count = count + <span class="num">1</span>
+  <span class="kw">return</span> count
+
+<span class="cm">// Time: O(n) — visit every element once</span>
+<span class="cm">// Space: O(1) — only one counter variable</span></code></pre>
+
+  <div class="viz">
+    <div class="viz-title">Trace — arr=[3,7,1,9,4,6], X=5</div>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:10px 0" id="p1-cells"></div>
+    <div style="margin-top:10px;font-size:13px;color:#aaa" id="p1-trace"></div>
+    <div class="viz-controls" style="margin-top:10px">
+      <button class="btn primary" onclick="p1Run()">▶ Trace</button>
+      <button class="btn" onclick="p1Reset()">↺ Reset</button>
+    </div>
+  </div>
+
+  <h3>🟡 Intermediate — P2: Find Second Largest</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>Find the second largest element in an array without sorting it. Handle duplicates.</p>
+  </div>
+  <pre><code><span class="cm">// Input:  arr = [12, 35, 1, 10, 34, 1]</span>
+<span class="cm">// Output: 34</span>
+
+<span class="fn">secondLargest</span>(arr, n):
+  <span class="kw">if</span> n < <span class="num">2</span>: <span class="kw">return</span> -<span class="num">1</span>
+  first  = -∞
+  second = -∞
+  <span class="kw">for</span> i = <span class="num">0</span> to n-<span class="num">1</span>:
+    <span class="kw">if</span> arr[i] > first:
+      second = first       <span class="cm">// old first drops to second</span>
+      first  = arr[i]
+    <span class="kw">elif</span> arr[i] > second <span class="kw">and</span> arr[i] != first:
+      second = arr[i]
+  <span class="kw">if</span> second == -∞: <span class="kw">return</span> -<span class="num">1</span>  <span class="cm">// all elements equal</span>
+  <span class="kw">return</span> second
+
+<span class="cm">// Time: O(n) — single pass</span>
+<span class="cm">// Space: O(1)</span></code></pre>
+
+  <h3>🔴 Microsoft-Level — P3: Majority Element</h3>
+  <div class="example">
+    <div class="ex-title">Problem (Boyer-Moore Voting Algorithm)</div>
+    <p>Find the element that appears more than ⌊n/2⌋ times. Must be O(n) time and O(1) space — no hash map allowed.</p>
+  </div>
+  <pre><code><span class="cm">// Input:  arr = [2, 2, 1, 1, 1, 2, 2]</span>
+<span class="cm">// Output: 2  (appears 4 times > 7/2 = 3.5)</span>
+
+<span class="fn">majorityElement</span>(arr, n):
+  <span class="cm">// Phase 1: Find candidate</span>
+  candidate = arr[<span class="num">0</span>]
+  count = <span class="num">1</span>
+  <span class="kw">for</span> i = <span class="num">1</span> to n-<span class="num">1</span>:
+    <span class="kw">if</span> count == <span class="num">0</span>:
+      candidate = arr[i]
+      count = <span class="num">1</span>
+    <span class="kw">elif</span> arr[i] == candidate:
+      count = count + <span class="num">1</span>
+    <span class="kw">else</span>:
+      count = count - <span class="num">1</span>
+
+  <span class="cm">// Phase 2: Verify candidate</span>
+  freq = <span class="num">0</span>
+  <span class="kw">for</span> i = <span class="num">0</span> to n-<span class="num">1</span>:
+    <span class="kw">if</span> arr[i] == candidate: freq++
+  <span class="kw">if</span> freq > n/<span class="num">2</span>: <span class="kw">return</span> candidate
+  <span class="kw">return</span> -<span class="num">1</span>  <span class="cm">// no majority element</span>
+
+<span class="cm">// Key insight: majority element "cancels out"</span>
+<span class="cm">// all other elements combined — last standing wins</span>
+<span class="cm">// Time: O(n)  Space: O(1)</span></code></pre>
+
+  <div class="note"><strong>Pattern to remember:</strong> Most array problems at Microsoft use one of: single pass with variables, two pointers, or prefix sums. Always ask — can I do this in O(n) time and O(1) space?</div>
+</div>
 </div>
 
 <!-- ═══════════════ ADT ═══════════════ -->
@@ -509,6 +598,103 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--blue)}
     <div class="card yellow"><h4>Definiteness</h4><p>Each step is clear and unambiguous.</p></div>
     <div class="card orange"><h4>Finiteness</h4><p>Must terminate after a finite number of steps.</p></div>
     <div class="card purple"><h4>Effectiveness</h4><p>Each step must be basic enough to be executed.</p></div>
+  </div>
+
+  <h2>Practice Problems</h2>
+
+  <h3>🟢 Beginner — P1: Design a Min-Max ADT</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>Design an ADT that supports: <strong>insert(x)</strong>, <strong>getMin()</strong>, <strong>getMax()</strong>. Define the interface only — not the implementation.</p>
+  </div>
+  <pre><code><span class="cm">// ADT Definition (interface/contract only)</span>
+<span class="type">ADT</span> MinMaxStore:
+  <span class="cm">// Operations:</span>
+  <span class="fn">insert</span>(x)    → adds x to the store
+  <span class="fn">getMin</span>()     → returns smallest element  <span class="cm">// O(1)</span>
+  <span class="fn">getMax</span>()     → returns largest element   <span class="cm">// O(1)</span>
+  <span class="fn">size</span>()       → returns count of elements
+
+<span class="cm">// Implementation A — using two variables:</span>
+<span class="fn">insert</span>(x):
+  <span class="kw">if</span> x < currentMin: currentMin = x
+  <span class="kw">if</span> x > currentMax: currentMax = x
+
+<span class="cm">// Implementation B — using sorted array:</span>
+<span class="cm">// getMin = arr[0], getMax = arr[n-1]</span>
+<span class="cm">// insert costs O(n) but get costs O(1)</span>
+
+<span class="cm">// Same ADT, two different implementations!</span>
+<span class="cm">// This is the power of abstraction.</span></code></pre>
+
+  <h3>🟡 Intermediate — P2: Stack using Two Queues</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>Implement a Stack ADT using only Queue operations. No array/linked-list directly.</p>
+  </div>
+  <pre><code><span class="cm">// Use two queues Q1 and Q2</span>
+<span class="cm">// Key idea: on every push, make Q1 hold</span>
+<span class="cm">// elements in LIFO order</span>
+
+<span class="fn">push</span>(x):
+  enqueue(Q2, x)              <span class="cm">// Step 1: add x to Q2</span>
+  <span class="kw">while</span> Q1 <span class="kw">not</span> empty:        <span class="cm">// Step 2: move all Q1 → Q2</span>
+    enqueue(Q2, dequeue(Q1))
+  swap(Q1, Q2)                <span class="cm">// Step 3: Q1 now has stack order</span>
+
+<span class="fn">pop</span>():
+  <span class="kw">if</span> Q1 empty: <span class="kw">return</span> error
+  <span class="kw">return</span> dequeue(Q1)         <span class="cm">// Front of Q1 = top of stack</span>
+
+<span class="cm">// Trace: push(1), push(2), push(3)</span>
+<span class="cm">// After push(1): Q1=[1]</span>
+<span class="cm">// After push(2): Q2=[2], move Q1→Q2=[2,1], swap → Q1=[2,1]</span>
+<span class="cm">// After push(3): Q1=[3,2,1]</span>
+<span class="cm">// pop() → dequeue Q1 → returns 3 ✅ LIFO!</span>
+
+<span class="cm">// Time: push O(n), pop O(1)</span></code></pre>
+
+  <h3>🔴 Microsoft-Level — P3: Design LRU Cache ADT</h3>
+  <div class="example">
+    <div class="ex-title">Problem (Classic Microsoft/Google Interview)</div>
+    <p>Design an LRU (Least Recently Used) Cache ADT with capacity k. Support <strong>get(key)</strong> and <strong>put(key, value)</strong> both in O(1).</p>
+  </div>
+  <pre><code><span class="cm">// ADT Contract:</span>
+<span class="cm">// get(key)        → return value if exists, else -1</span>
+<span class="cm">// put(key, value) → insert/update; if at capacity,</span>
+<span class="cm">//                   evict least recently used item</span>
+
+<span class="cm">// Implementation uses:</span>
+<span class="cm">// 1. HashMap  → O(1) key lookup</span>
+<span class="cm">// 2. Doubly Linked List → O(1) insert/delete anywhere</span>
+
+<span class="type">Structure</span> Node: {key, value, prev, next}
+<span class="type">Structure</span> LRUCache: {capacity, map, head, tail}
+
+<span class="fn">get</span>(key):
+  <span class="kw">if</span> key <span class="kw">not in</span> map: <span class="kw">return</span> -<span class="num">1</span>
+  node = map[key]
+  moveToFront(node)      <span class="cm">// mark as recently used</span>
+  <span class="kw">return</span> node.value
+
+<span class="fn">put</span>(key, value):
+  <span class="kw">if</span> key <span class="kw">in</span> map:
+    map[key].value = value
+    moveToFront(map[key])
+  <span class="kw">else</span>:
+    <span class="kw">if</span> size == capacity:
+      lru = removeTail()       <span class="cm">// evict LRU</span>
+      delete map[lru.key]
+    newNode = Node(key, value)
+    addToFront(newNode)        <span class="cm">// most recently used</span>
+    map[key] = newNode
+
+<span class="cm">// HEAD ↔ [most recent] ↔ ... ↔ [least recent] ↔ TAIL</span>
+<span class="cm">// Time: O(1) for both get and put</span>
+<span class="cm">// Space: O(capacity)</span></code></pre>
+
+  <div class="note"><strong>Interview tip:</strong> When asked to "design" something, always state the ADT first (what operations, what guarantees) before jumping to implementation. Interviewers reward structured thinking.</div>
+</div>
   </div>
 </div>
 
@@ -579,6 +765,118 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--blue)}
   </table>
 
   <div class="note"><strong>Rule of thumb for interviews:</strong> O(1) = instant ✅ · O(log n) = fast ✅ · O(n) = acceptable ✅ · O(n log n) = decent ⚠️ · O(n²) = slow ❌ · O(2ⁿ) = terrible ❌</div>
+
+  <h2>Practice Problems</h2>
+
+  <h3>🟢 Beginner — P1: Identify the Complexity</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>What is the time complexity of each snippet? Reason through it step by step.</p>
+  </div>
+  <pre><code><span class="cm">// Snippet A</span>
+sum = <span class="num">0</span>
+<span class="kw">for</span> i = <span class="num">1</span> to n:
+  sum = sum + i
+<span class="cm">// → O(n): one loop, one operation per iteration</span>
+
+<span class="cm">// Snippet B</span>
+<span class="kw">for</span> i = <span class="num">1</span> to n:
+  <span class="kw">for</span> j = <span class="num">1</span> to n:
+    print(i, j)
+<span class="cm">// → O(n²): nested loops, each runs n times</span>
+
+<span class="cm">// Snippet C</span>
+i = n
+<span class="kw">while</span> i > <span class="num">1</span>:
+  i = i / <span class="num">2</span>
+<span class="cm">// → O(log n): halving each time</span>
+
+<span class="cm">// Snippet D</span>
+<span class="kw">for</span> i = <span class="num">1</span> to n:
+  j = <span class="num">1</span>
+  <span class="kw">while</span> j < n:
+    j = j * <span class="num">2</span>
+<span class="cm">// → O(n log n): outer O(n), inner O(log n)</span></code></pre>
+
+  <h3>🟡 Intermediate — P2: Recursive Complexity</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>Find the time complexity of these recursive functions using the recurrence relation.</p>
+  </div>
+  <pre><code><span class="cm">// Function A — Binary Recursion</span>
+<span class="fn">fib</span>(n):
+  <span class="kw">if</span> n <= <span class="num">1</span>: <span class="kw">return</span> n
+  <span class="kw">return</span> fib(n-<span class="num">1</span>) + fib(n-<span class="num">2</span>)
+<span class="cm">// Recurrence: T(n) = T(n-1) + T(n-2) + O(1)</span>
+<span class="cm">// → O(2ⁿ)  Each call spawns 2 more calls</span>
+
+<span class="cm">// Function B — Merge Sort style</span>
+<span class="fn">solve</span>(n):
+  <span class="kw">if</span> n == <span class="num">1</span>: <span class="kw">return</span>
+  solve(n/<span class="num">2</span>)
+  solve(n/<span class="num">2</span>)
+  doLinearWork(n)           <span class="cm">// O(n) merge step</span>
+<span class="cm">// Recurrence: T(n) = 2T(n/2) + O(n)</span>
+<span class="cm">// Master Theorem: a=2, b=2, f(n)=n</span>
+<span class="cm">// log_b(a) = log₂2 = 1 = degree of f(n)</span>
+<span class="cm">// → O(n log n)  ← Case 2 of Master Theorem</span>
+
+<span class="cm">// Function C — Simple recursion</span>
+<span class="fn">sumArray</span>(arr, n):
+  <span class="kw">if</span> n == <span class="num">0</span>: <span class="kw">return</span> <span class="num">0</span>
+  <span class="kw">return</span> arr[n-<span class="num">1</span>] + sumArray(arr, n-<span class="num">1</span>)
+<span class="cm">// Recurrence: T(n) = T(n-1) + O(1)</span>
+<span class="cm">// → O(n)  n recursive calls, O(1) each</span></code></pre>
+
+  <h3>🔴 Microsoft-Level — P3: Optimize the Solution</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>Given a sorted array, find all pairs that sum to a target value. Improve from O(n²) brute force to O(n).</p>
+  </div>
+  <pre><code><span class="cm">// Input:  arr = [1, 2, 3, 4, 6, 8, 9], target = 10</span>
+<span class="cm">// Output: (1,9), (2,8), (4,6)</span>
+
+<span class="cm">// ❌ Brute Force — O(n²)</span>
+<span class="fn">pairsBrute</span>(arr, n, target):
+  <span class="kw">for</span> i = <span class="num">0</span> to n-<span class="num">1</span>:
+    <span class="kw">for</span> j = i+<span class="num">1</span> to n-<span class="num">1</span>:
+      <span class="kw">if</span> arr[i] + arr[j] == target:
+        print(arr[i], arr[j])
+
+<span class="cm">// ✅ Two Pointer — O(n)  uses sorted property!</span>
+<span class="fn">pairsTwoPtr</span>(arr, n, target):
+  left  = <span class="num">0</span>
+  right = n - <span class="num">1</span>
+  <span class="kw">while</span> left < right:
+    s = arr[left] + arr[right]
+    <span class="kw">if</span> s == target:
+      print(arr[left], arr[right])
+      left++; right--
+    <span class="kw">elif</span> s < target:
+      left++          <span class="cm">// need bigger sum</span>
+    <span class="kw">else</span>:
+      right--         <span class="cm">// need smaller sum</span>
+
+<span class="cm">// Complexity improvement:</span>
+<span class="cm">// Brute:     O(n²) time, O(1) space</span>
+<span class="cm">// Two Ptr:   O(n)  time, O(1) space  ← optimal!</span>
+<span class="cm">// Hash Set:  O(n)  time, O(n) space  ← also valid</span></code></pre>
+
+  <div class="viz">
+    <div class="viz-title">Two Pointer Trace — arr=[1,2,3,4,6,8,9], target=10</div>
+    <div class="arr-row" id="tp-cells"></div>
+    <div class="status-bar" id="tp-status">Click Trace to see two pointer movement</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="tpRun()">▶ Trace</button>
+      <button class="btn" onclick="tpReset()">↺ Reset</button>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--blue)">■ Left pointer</span>
+      <span style="font-size:11px;color:var(--purple)">■ Right pointer</span>
+      <span style="font-size:11px;color:var(--green)">■ Pair found</span>
+    </div>
+  </div>
+</div>
 </div>
 
 <!-- ═══════════════ ASYMPTOTIC NOTATIONS ═══════════════ -->
@@ -671,6 +969,87 @@ f(n) = n·log(n) + n  →  O(n log n)
 <span class="cm">// Total → O(n) + O(n) = O(n)</span></code></pre>
 
   <div class="note"><strong>Interview tip:</strong> When asked "what is the time complexity?", always state Big O (worst case) unless specifically asked for best or average case.</div>
+
+  <h2>Practice Problems</h2>
+
+  <h3>🟢 Beginner — P1: Classify the Notation</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>For each function pair, state whether f(n) = O(g(n)), Ω(g(n)), Θ(g(n)), or none.</p>
+  </div>
+  <pre><code><span class="cm">// Rule: find the dominant term, drop constants</span>
+
+<span class="cm">// Q1: f(n) = 3n² + 2n + 1,  g(n) = n²</span>
+<span class="cm">// f grows same rate as g → f = Θ(n²)</span>
+<span class="cm">// Also true: f = O(n²) AND f = Ω(n²)</span>
+
+<span class="cm">// Q2: f(n) = n log n,  g(n) = n²</span>
+<span class="cm">// n log n grows slower than n²</span>
+<span class="cm">// → f = O(n²)  [f is upper bounded by n²]</span>
+<span class="cm">// → f = Ω(n)   [f is lower bounded by n]</span>
+<span class="cm">// NOT Θ(n²) because they don't grow at same rate</span>
+
+<span class="cm">// Q3: f(n) = 2ⁿ,  g(n) = n¹⁰⁰</span>
+<span class="cm">// Exponential always beats polynomial</span>
+<span class="cm">// → f = Ω(n¹⁰⁰)  [exponential is lower bounded</span>
+<span class="cm">//                  by any polynomial]</span></code></pre>
+
+  <h3>🟡 Intermediate — P2: Prove Big O Formally</h3>
+  <div class="example">
+    <div class="ex-title">Problem</div>
+    <p>Formally prove that f(n) = 4n² + 3n is O(n²) by finding constants c and n₀.</p>
+  </div>
+  <pre><code><span class="cm">// Formal proof structure:</span>
+<span class="cm">// Need to find c > 0 and n₀ ≥ 1 such that:</span>
+<span class="cm">// f(n) ≤ c·g(n) for all n ≥ n₀</span>
+
+<span class="cm">// f(n) = 4n² + 3n</span>
+<span class="cm">// For n ≥ 1: 3n ≤ 3n²</span>
+<span class="cm">// So: 4n² + 3n ≤ 4n² + 3n² = 7n²</span>
+
+<span class="cm">// Therefore: f(n) ≤ 7·n² for all n ≥ 1</span>
+<span class="cm">// → c = 7, n₀ = 1</span>
+<span class="cm">// → f(n) = O(n²)  ✅ proven!</span>
+
+<span class="cm">// Similarly prove Ω(n²):</span>
+<span class="cm">// 4n² + 3n ≥ 4n² for all n ≥ 0</span>
+<span class="cm">// → c = 4, n₀ = 0</span>
+<span class="cm">// → f(n) = Ω(n²)  ✅</span>
+<span class="cm">// Combined: f(n) = Θ(n²)  ✅</span></code></pre>
+
+  <h3>🔴 Microsoft-Level — P3: Amortized Analysis</h3>
+  <div class="example">
+    <div class="ex-title">Problem — Dynamic Array Amortized Cost</div>
+    <p>A dynamic array doubles in size when full. Show that n insertions cost O(n) total — meaning O(1) amortized per insertion — even though some insertions cost O(n).</p>
+  </div>
+  <pre><code><span class="cm">// Scenario: start with capacity 1, double when full</span>
+<span class="cm">// Cost of each insertion:</span>
+
+<span class="cm">// Insert 1: capacity=1, no resize  → cost 1</span>
+<span class="cm">// Insert 2: resize (copy 1 elem)   → cost 1+1 = 2</span>
+<span class="cm">// Insert 3: resize (copy 2 elems)  → cost 2+1 = 3</span>
+<span class="cm">// Insert 4: no resize              → cost 1</span>
+<span class="cm">// Insert 5: resize (copy 4 elems)  → cost 4+1 = 5</span>
+<span class="cm">// Insert 6,7,8: no resize          → cost 1 each</span>
+<span class="cm">// Insert 9: resize (copy 8 elems)  → cost 8+1 = 9</span>
+
+<span class="cm">// Total cost for n insertions:</span>
+<span class="cm">// = n + (1 + 2 + 4 + 8 + ... + n/2)</span>
+<span class="cm">// = n + n (geometric series sum ≈ 2n)</span>
+<span class="cm">// = O(n)</span>
+
+<span class="cm">// Amortized cost per insertion:</span>
+<span class="cm">// = O(n) / n = O(1)  ✅</span>
+
+<span class="cm">// This is why Python list.append() is O(1) amortized</span>
+<span class="cm">// even though occasional resizes cost O(n)</span>
+
+<span class="cm">// Banker's method intuition:</span>
+<span class="cm">// Each insertion "saves" 1 credit for future resize</span>
+<span class="cm">// When resize happens, saved credits pay for it</span></code></pre>
+
+  <div class="note"><strong>Amortized ≠ Average:</strong> Average case assumes random input. Amortized is a worst-case guarantee spread over a sequence of operations. Dynamic arrays, union-find, and splay trees all use amortized analysis.</div>
+</div>
 </div>
 
 <!-- ═══════════════ ARRAYS ═══════════════ -->
@@ -2922,6 +3301,83 @@ function insReset(){ insRun=false; insInit(); }
 window.addEventListener('DOMContentLoaded', function(){
   lsInit();
 });
+
+// ═══════════ P1 VISUALIZER (Count Greater) ═══════════
+var p1Arr=[3,7,1,9,4,6], p1X=5, p1Running=false;
+function p1Reset(){
+  p1Running=false;
+  var c=document.getElementById('p1-cells');
+  if(!c) return;
+  c.innerHTML='';
+  p1Arr.forEach(function(v,i){
+    var d=document.createElement('div');
+    d.style.cssText='background:var(--bg4);border:1.5px solid var(--border3);border-radius:6px;padding:10px 4px;text-align:center;font-weight:700;font-size:14px;color:var(--text);transition:all .3s';
+    d.id='p1c'+i; d.textContent=v;
+    c.appendChild(d);
+  });
+  var t=document.getElementById('p1-trace');
+  if(t) t.innerHTML='Array: ['+p1Arr.join(', ')+'] &nbsp;|&nbsp; X = '+p1X;
+}
+async function p1Run(){
+  p1Reset();
+  if(p1Running) return; p1Running=true;
+  var count=0;
+  for(var i=0;i<p1Arr.length;i++){
+    var el=document.getElementById('p1c'+i);
+    if(el){
+      el.style.borderColor='var(--yellow)';
+      el.style.background='rgba(251,191,36,.15)';
+      el.style.color='var(--yellow)';
+    }
+    await sleep(500);
+    var t=document.getElementById('p1-trace');
+    if(p1Arr[i]>p1X){
+      count++;
+      if(el){ el.style.borderColor='var(--green)'; el.style.background='rgba(74,222,128,.15)'; el.style.color='var(--green)'; }
+      if(t) t.innerHTML='arr['+i+']='+p1Arr[i]+' > '+p1X+' ✅ count = <strong style="color:var(--green)">'+count+'</strong>';
+    } else {
+      if(el){ el.style.borderColor='var(--border3)'; el.style.background='rgba(255,255,255,.03)'; el.style.color='#555'; }
+      if(t) t.innerHTML='arr['+i+']='+p1Arr[i]+' ≤ '+p1X+' ❌ skip';
+    }
+    await sleep(400);
+  }
+  var t=document.getElementById('p1-trace');
+  if(t) t.innerHTML='<span style="color:var(--green);font-weight:700">Done! Count = '+count+' elements greater than '+p1X+'</span>';
+  p1Running=false;
+}
+
+// ═══════════ TWO POINTER VISUALIZER ═══════════
+var tpArr=[1,2,3,4,6,8,9], tpTarget=10, tpRunning=false;
+function tpReset(){
+  tpRunning=false;
+  buildCells(tpArr,'tp-cells');
+  var s=document.getElementById('tp-status');
+  if(s) s.textContent='Click Trace to see two pointer movement';
+}
+async function tpRun(){
+  tpReset();
+  if(tpRunning) return; tpRunning=true;
+  var lo=0, hi=tpArr.length-1, pairs=[];
+  var status=document.getElementById('tp-status');
+  while(lo<hi){
+    clearClasses('tp-cells',tpArr.length);
+    setClass('tp-cells',lo,'c-lo');
+    setClass('tp-cells',hi,'c-hi');
+    var s=tpArr[lo]+tpArr[hi];
+    if(status) status.innerHTML='left='+tpArr[lo]+' + right='+tpArr[hi]+' = '+s+' vs target='+tpTarget;
+    await sleep(800);
+    if(s===tpTarget){
+      setClass('tp-cells',lo,'c-found');
+      setClass('tp-cells',hi,'c-found');
+      pairs.push('('+tpArr[lo]+','+tpArr[hi]+')');
+      if(status) status.innerHTML='<span style="color:var(--green)">✅ Pair found: '+tpArr[lo]+' + '+tpArr[hi]+' = '+tpTarget+'</span>';
+      await sleep(700);
+      lo++; hi--;
+    } else if(s<tpTarget){ lo++; } else { hi--; }
+  }
+  if(status) status.innerHTML='<span style="color:var(--green);font-weight:700">All pairs: '+pairs.join(', ')+'</span>';
+  tpRunning=false;
+}
 </script>
 </body>
 </html>
