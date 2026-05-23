@@ -223,12 +223,12 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--blue)}
 @media(max-width:768px){
   body{flex-direction:column;height:auto;overflow:auto}
 
-  #sidebar{
+#sidebar{
     width:100%;min-width:unset;
     border-right:none;border-bottom:1px solid var(--border2);
     overflow-y:visible;overflow-x:hidden;
     max-height:52px;transition:max-height .3s ease;
-    position:sticky;top:0;z-index:100;background:var(--bg2)
+    position:fixed;top:0;left:0;right:0;z-index:100;background:var(--bg2)
   }
   #sidebar.open{max-height:100vh;overflow-y:auto}
 
