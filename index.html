@@ -1211,6 +1211,134 @@ arr[<span class="num">2</span>] = <span class="num">25</span>;  <span class="cm"
   <div class="example">
     <div class="ex-title">When to use Linear Search?</div>
     <p>✅ Array is small (n &lt; 100)<br>✅ Array is <strong>unsorted</strong> (Binary search requires sorted data)<br>✅ Searching in a linked list (no random access available)<br>❌ Don't use for large sorted arrays — Binary Search is much better</p>
+	
+	<h2>Method 2 — Sentinel Linear Search</h2>
+  <p>Optimization: place the target at the last index (sentinel). This removes the bounds check <code>i &lt; n</code> from every iteration — saving one comparison per step.</p>
+  <pre><code><span class="cm">// Java — Sentinel Linear Search</span>
+<span class="cm">// Input:  arr = [10, 50, 30, 70, 60], target = 30</span>
+<span class="cm">// Output: index 2</span>
+
+<span class="kw">static int</span> <span class="fn">sentinelSearch</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    <span class="type">int</span> n = arr.length;
+    <span class="type">int</span> last = arr[n - <span class="num">1</span>];      <span class="cm">// save last element</span>
+    arr[n - <span class="num">1</span>] = target;          <span class="cm">// place sentinel</span>
+
+    <span class="type">int</span> i = <span class="num">0</span>;
+    <span class="kw">while</span> (arr[i] != target)    <span class="cm">// no bounds check needed!</span>
+        i++;
+
+    arr[n - <span class="num">1</span>] = last;           <span class="cm">// restore last element</span>
+
+    <span class="kw">if</span> (i &lt; n - <span class="num">1</span> || arr[n - <span class="num">1</span>] == target)
+        <span class="kw">return</span> i;
+    <span class="kw">return</span> -<span class="num">1</span>;
+}
+<span class="cm">// Time: O(n)  Space: O(1)</span>
+<span class="cm">// Advantage: ~half the comparisons vs normal linear search</span></code></pre>
+
+  <div class="viz">
+    <div class="viz-title">Sentinel Search — arr=[10,50,30,70,60]</div>
+	<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+	  <span style="font-size:12px;color:#888">Search for:</span>
+	  <input type="number" id="sent-val" value="30" style="width:65px">
+	  <span style="font-size:11px;color:#555">Array: [10, 50, 30, 70, 60]</span>
+	</div>
+	<div class="arr-row" id="sent-arr"></div>
+    <div class="status-bar" id="sent-status">Click ▶ Trace to begin</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="sentRun()">▶ Trace</button>
+      <button class="btn" onclick="sentReset()">↺ Reset</button>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--yellow)">■ Checking</span>
+      <span style="font-size:11px;color:var(--pink)">■ Sentinel placed</span>
+      <span style="font-size:11px;color:var(--green)">■ Found</span>
+    </div>
+  </div>
+
+  <h2>Method 3 — Find All Occurrences</h2>
+  <p>Don't stop at the first match. Collect every index where the target appears. Used in text search, frequency counting.</p>
+  <pre><code><span class="cm">// Java — Find all occurrences</span>
+<span class="cm">// Input:  arr = [5, 3, 7, 3, 9, 3], target = 3</span>
+<span class="cm">// Output: [1, 3, 5]</span>
+
+<span class="kw">static</span> ArrayList&lt;<span class="type">Integer</span>&gt; <span class="fn">findAll</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    ArrayList&lt;<span class="type">Integer</span>&gt; result = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; arr.length; i++) {
+        <span class="kw">if</span> (arr[i] == target)
+            result.add(i);        <span class="cm">// collect index, don't stop</span>
+    }
+    <span class="kw">return</span> result;              <span class="cm">// empty list if not found</span>
+}
+<span class="cm">// Time: O(n) always — must check all elements</span>
+<span class="cm">// Space: O(k) where k = number of occurrences</span></code></pre>
+
+  <div class="viz">
+   <div class="viz-title">Find All Occurrences — arr=[5,3,7,3,9,3]</div>
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+  <span style="font-size:12px;color:#888">Search for:</span>
+  <input type="number" id="fa-val" value="3" style="width:65px">
+  <span style="font-size:11px;color:#555">Array: [5, 3, 7, 3, 9, 3]</span>
+</div>
+<div class="arr-row" id="fa-arr"></div>
+    <div class="status-bar" id="fa-status">Click ▶ Trace to begin</div>
+    <div style="margin-top:8px;font-size:12px;color:#aaa">Found at indices: <span id="fa-result" style="color:var(--green);font-weight:700">—</span></div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="faRun()">▶ Trace</button>
+      <button class="btn" onclick="faReset()">↺ Reset</button>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--yellow)">■ Checking</span>
+      <span style="font-size:11px;color:var(--green)">■ Match found</span>
+      <span style="font-size:11px;color:#444">■ No match</span>
+    </div>
+  </div>
+
+  <h2>Method 4 — Linear Search in 2D Array</h2>
+  <pre><code><span class="cm">// Java — Search in 2D array row by row</span>
+<span class="cm">// Input:  matrix = [[1,2,3],[4,5,6],[7,8,9]], target=5</span>
+<span class="cm">// Output: row=1, col=1</span>
+
+<span class="kw">static int</span>[] <span class="fn">search2D</span>(<span class="type">int</span>[][] matrix, <span class="type">int</span> target) {
+    <span class="kw">for</span> (<span class="type">int</span> r = <span class="num">0</span>; r &lt; matrix.length; r++) {
+        <span class="kw">for</span> (<span class="type">int</span> c = <span class="num">0</span>; c &lt; matrix[r].length; c++) {
+            <span class="kw">if</span> (matrix[r][c] == target)
+                <span class="kw">return new int</span>[]{r, c};  <span class="cm">// {row, col}</span>
+        }
+    }
+    <span class="kw">return new int</span>[]{-<span class="num">1</span>, -<span class="num">1</span>};      <span class="cm">// not found</span>
+}
+<span class="cm">// Time: O(rows × cols)  Space: O(1)</span></code></pre>
+
+  <div class="viz">
+<div class="viz-title">2D Search — matrix 3×3</div>
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+  <span style="font-size:12px;color:#888">Search for:</span>
+  <input type="number" id="g2d-val" value="5" style="width:65px">
+  <span style="font-size:11px;color:#555">Matrix: [[1,2,3],[4,5,6],[7,8,9]]</span>
+</div>    <div id="grid2d" style="display:inline-grid;grid-template-columns:repeat(3,50px);gap:5px;margin:10px 0"></div>
+    <div class="status-bar" id="g2d-status">Click ▶ Trace to scan row by row</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="g2dRun()">▶ Trace</button>
+      <button class="btn" onclick="g2dReset()">↺ Reset</button>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--yellow)">■ Checking</span>
+      <span style="font-size:11px;color:var(--green)">■ Found</span>
+      <span style="font-size:11px;color:#333">■ Skipped</span>
+    </div>
+  </div>
+
+  <h2>Comparison Table — All Linear Search Methods</h2>
+  <table class="tbl">
+    <thead><tr><th>Method</th><th>Time</th><th>Space</th><th>Best For</th></tr></thead>
+    <tbody>
+      <tr><td>Standard</td><td><span class="badge on">O(n)</span></td><td><span class="badge o1">O(1)</span></td><td>General unsorted search</td></tr>
+      <tr><td>Sentinel</td><td><span class="badge on">O(n)</span></td><td><span class="badge o1">O(1)</span></td><td>Fewer comparisons, same asymptotic</td></tr>
+      <tr><td>Find All</td><td><span class="badge on">O(n)</span></td><td><span class="badge on">O(k)</span></td><td>Duplicate detection, frequency count</td></tr>
+      <tr><td>2D Search</td><td><span class="badge on">O(n×m)</span></td><td><span class="badge o1">O(1)</span></td><td>Matrix/grid problems</td></tr>
+    </tbody>
+  </table>
   </div>
 </div>
 
@@ -1303,6 +1431,140 @@ arr[<span class="num">2</span>] = <span class="num">25</span>;  <span class="cm"
     </tbody>
   </table>
   <div class="note"><strong>Prerequisite:</strong> Array MUST be sorted before applying binary search. Sorting costs O(n log n) so for a single search on unsorted data, linear search may be preferable.</div>
+  <h2>Method 3 — Find First Occurrence (Left Boundary)</h2>
+  <p>When duplicates exist, standard binary search may land on any copy. This variant always finds the <strong>leftmost</strong> occurrence.</p>
+  <pre><code><span class="cm">// Java — First occurrence of target in sorted array</span>
+<span class="cm">// Input:  arr = [1, 3, 3, 3, 5, 7], target = 3</span>
+<span class="cm">// Output: index 1  (not 2 or 3)</span>
+
+<span class="kw">static int</span> <span class="fn">firstOccurrence</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    <span class="type">int</span> lo = <span class="num">0</span>, hi = arr.length - <span class="num">1</span>, result = -<span class="num">1</span>;
+    <span class="kw">while</span> (lo &lt;= hi) {
+        <span class="type">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;  <span class="cm">// avoids int overflow</span>
+        <span class="kw">if</span> (arr[mid] == target) {
+            result = mid;           <span class="cm">// record, but keep going LEFT</span>
+            hi = mid - <span class="num">1</span>;
+        } <span class="kw">else if</span> (arr[mid] &lt; target) {
+            lo = mid + <span class="num">1</span>;
+        } <span class="kw">else</span> {
+            hi = mid - <span class="num">1</span>;
+        }
+    }
+    <span class="kw">return</span> result;
+}
+<span class="cm">// Key difference: on match, save result then continue LEFT</span>
+<span class="cm">// Time: O(log n)  Space: O(1)</span></code></pre>
+
+  <div class="viz">
+<div class="viz-title">First Occurrence — arr=[1,3,3,3,5,7]</div>
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+  <span style="font-size:12px;color:#888">Search for:</span>
+  <input type="number" id="fo-val" value="3" style="width:65px">
+  <span style="font-size:11px;color:#555">Array: [1, 3, 3, 3, 5, 7] — try 1, 3, 5, 7</span>
+</div>    <div class="arr-row" id="fo-arr"></div>
+    <div class="status-bar" id="fo-status">Click ▶ Trace</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="foRun()">▶ Trace</button>
+      <button class="btn" onclick="foReset()">↺ Reset</button>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--blue)">■ Low</span>
+      <span style="font-size:11px;color:var(--pink)">■ Mid</span>
+      <span style="font-size:11px;color:var(--purple)">■ High</span>
+      <span style="font-size:11px;color:var(--green)">■ First match</span>
+      <span style="font-size:11px;color:#333">■ Eliminated</span>
+    </div>
+  </div>
+
+  <h2>Method 4 — Find Last Occurrence (Right Boundary)</h2>
+  <pre><code><span class="cm">// Java — Last occurrence of target</span>
+<span class="cm">// Input:  arr = [1, 3, 3, 3, 5, 7], target = 3</span>
+<span class="cm">// Output: index 3</span>
+
+<span class="kw">static int</span> <span class="fn">lastOccurrence</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    <span class="type">int</span> lo = <span class="num">0</span>, hi = arr.length - <span class="num">1</span>, result = -<span class="num">1</span>;
+    <span class="kw">while</span> (lo &lt;= hi) {
+        <span class="type">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+        <span class="kw">if</span> (arr[mid] == target) {
+            result = mid;           <span class="cm">// record, but keep going RIGHT</span>
+            lo = mid + <span class="num">1</span>;
+        } <span class="kw">else if</span> (arr[mid] &lt; target) {
+            lo = mid + <span class="num">1</span>;
+        } <span class="kw">else</span> {
+            hi = mid - <span class="num">1</span>;
+        }
+    }
+    <span class="kw">return</span> result;
+}
+<span class="cm">// Key difference: on match, save result then continue RIGHT</span>
+<span class="cm">// Count of target = lastOccurrence - firstOccurrence + 1</span></code></pre>
+
+  <h2>Method 5 — Search in Rotated Sorted Array 🔴 Microsoft</h2>
+  <div class="example">
+    <div class="ex-title">Classic Microsoft / Amazon Interview Problem</div>
+    <p>A sorted array was rotated at an unknown pivot. Example: [4,5,6,7,0,1,2] was originally [0,1,2,4,5,6,7]. Find target in O(log n) — no linear scan allowed.</p>
+  </div>
+  <pre><code><span class="cm">// Java — Binary Search on Rotated Sorted Array</span>
+<span class="cm">// Input:  arr = [4, 5, 6, 7, 0, 1, 2], target = 0</span>
+<span class="cm">// Output: index 4</span>
+
+<span class="kw">static int</span> <span class="fn">searchRotated</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    <span class="type">int</span> lo = <span class="num">0</span>, hi = arr.length - <span class="num">1</span>;
+    <span class="kw">while</span> (lo &lt;= hi) {
+        <span class="type">int</span> mid = lo + (hi - lo) / <span class="num">2</span>;
+        <span class="kw">if</span> (arr[mid] == target) <span class="kw">return</span> mid;
+
+        <span class="cm">// Determine which half is sorted</span>
+        <span class="kw">if</span> (arr[lo] &lt;= arr[mid]) {          <span class="cm">// LEFT half is sorted</span>
+            <span class="kw">if</span> (target &gt;= arr[lo] &amp;&amp; target &lt; arr[mid])
+                hi = mid - <span class="num">1</span>;             <span class="cm">// target in left half</span>
+            <span class="kw">else</span>
+                lo = mid + <span class="num">1</span>;             <span class="cm">// target in right half</span>
+        } <span class="kw">else</span> {                            <span class="cm">// RIGHT half is sorted</span>
+            <span class="kw">if</span> (target &gt; arr[mid] &amp;&amp; target &lt;= arr[hi])
+                lo = mid + <span class="num">1</span>;             <span class="cm">// target in right half</span>
+            <span class="kw">else</span>
+                hi = mid - <span class="num">1</span>;             <span class="cm">// target in left half</span>
+        }
+    }
+    <span class="kw">return</span> -<span class="num">1</span>;
+}
+<span class="cm">// Key insight: one half is ALWAYS sorted after a rotation</span>
+<span class="cm">// Check which half is sorted, then check if target is in it</span>
+<span class="cm">// Time: O(log n)  Space: O(1)</span></code></pre>
+
+  <div class="viz">
+<div class="viz-title">Rotated Array Search — arr=[4,5,6,7,0,1,2]</div>
+<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+  <span style="font-size:12px;color:#888">Search for:</span>
+  <input type="number" id="rot-val" value="0" style="width:65px">
+  <span style="font-size:11px;color:#555">Array: [4, 5, 6, 7, 0, 1, 2] — try 0,1,4,6,9</span>
+</div>    <div class="arr-row" id="rot-arr"></div>
+    <div class="status-bar" id="rot-status">Click ▶ Trace</div>
+    <div class="viz-controls">
+      <button class="btn primary" onclick="rotRun()">▶ Trace</button>
+      <button class="btn" onclick="rotReset()">↺ Reset</button>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
+      <span style="font-size:11px;color:var(--blue)">■ Low</span>
+      <span style="font-size:11px;color:var(--pink)">■ Mid</span>
+      <span style="font-size:11px;color:var(--purple)">■ High</span>
+      <span style="font-size:11px;color:var(--green)">■ Found</span>
+      <span style="font-size:11px;color:var(--teal)">■ Sorted half</span>
+    </div>
+  </div>
+
+  <h2>All Binary Search Methods — Summary</h2>
+  <table class="tbl">
+    <thead><tr><th>Method</th><th>Time</th><th>Space</th><th>Use Case</th></tr></thead>
+    <tbody>
+      <tr><td>Standard</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge o1">O(1)</span></td><td>Find any occurrence in sorted array</td></tr>
+      <tr><td>Recursive</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge ologn">O(log n)</span></td><td>Same — but uses call stack space</td></tr>
+      <tr><td>First Occurrence</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge o1">O(1)</span></td><td>Leftmost duplicate in sorted array</td></tr>
+      <tr><td>Last Occurrence</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge o1">O(1)</span></td><td>Rightmost duplicate, count elements</td></tr>
+      <tr><td>Rotated Array</td><td><span class="badge ologn">O(log n)</span></td><td><span class="badge o1">O(1)</span></td><td>Microsoft/Amazon favourite problem</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- ═══════════════ STACK ═══════════════ -->
@@ -2874,8 +3136,8 @@ function goTo(id, el){
     if(sb) sb.classList.remove('open');
   }
   setTimeout(function(){
-    if(id==='linear') lsInit();
-    if(id==='binary') bsInit();
+    if(id==='linear'){ lsInit(); sentReset(); faReset(); g2dReset(); }
+    if(id==='binary'){ bsInit(); foReset(); rotReset(); }
     if(id==='stack') stkInit();
     if(id==='queue') qInit();
     if(id==='linkedlist') llInit();
@@ -3324,7 +3586,12 @@ function p1Reset(){
   if(t) t.innerHTML='Array: ['+p1Arr.join(', ')+'] &nbsp;|&nbsp; X = '+p1X;
 }
 async function p1Run(){
-  p1Reset();
+	p1Reset();
+	sentReset();
+	faReset();
+	g2dReset();
+	foReset();
+	rotReset();
   if(p1Running) return; p1Running=true;
   var count=0;
   for(var i=0;i<p1Arr.length;i++){
@@ -3382,6 +3649,299 @@ async function tpRun(){
   }
   if(status) status.innerHTML='<span style="color:var(--green);font-weight:700">All pairs: '+pairs.join(', ')+'</span>';
   tpRunning=false;
+}
+
+
+// ═══════════ SENTINEL SEARCH ═══════════
+var sentArr=[10,50,30,70,60], sentRunning=false;
+function sentReset(){
+  sentRunning=false;
+  buildCells(sentArr,'sent-arr');
+  // mark last cell as sentinel slot
+  var last=document.getElementById('sent-arr_'+(sentArr.length-1));
+  if(last){ last.querySelector('.cell-val').style.border='1.5px dashed var(--pink)'; }
+  var s=document.getElementById('sent-status'); if(s) s.textContent='Click ▶ Trace to begin';
+}
+async function sentRun(){
+  if(sentRunning) return; sentRunning=true;
+  var sentTarget=parseInt(document.getElementById('sent-val').value);
+  
+  // work on a COPY — never modify original sentArr
+  var arr=sentArr.slice();
+  var n=arr.length;
+  
+  // build cells from original array first
+  buildCells(sentArr,'sent-arr');
+  var status=document.getElementById('sent-status');
+
+  await sleep(300);
+
+  // show sentinel being placed (visually only — last cell changes color)
+  var lastEl=document.getElementById('sent-arr_'+(n-1));
+  if(lastEl){
+    lastEl.querySelector('.cell-val').style.borderColor='var(--pink)';
+    lastEl.querySelector('.cell-val').style.background='rgba(244,114,182,.15)';
+    lastEl.querySelector('.cell-val').style.color='var(--pink)';
+  }
+  if(status) status.innerHTML='<span style="color:var(--pink)">Sentinel slot reserved at index '+(n-1)+'</span> → loop runs without bounds check';
+  await sleep(900);
+
+  // place sentinel in the COPY only
+  var savedLast=arr[n-1];
+  arr[n-1]=sentTarget;
+
+  // update last cell display to show sentinel value
+  if(lastEl) lastEl.querySelector('.cell-val').textContent=sentTarget;
+
+  await sleep(600);
+
+  var i=0;
+  while(arr[i]!==sentTarget){
+    if(!sentRunning) break;
+    setClass('sent-arr',i,'c-active');
+    if(status) status.innerHTML='<span class="step">i='+i+':</span> arr['+i+']='+arr[i]+' ≠ '+sentTarget+' → move ahead';
+    await sleep(600);
+    setClass('sent-arr',i,'c-dim');
+    i++;
+  }
+
+  if(!sentRunning) return;
+
+  // check if real match or only sentinel matched
+  if(i < n-1){
+    // restore last cell display before highlighting
+    if(lastEl) lastEl.querySelector('.cell-val').textContent=savedLast;
+    setClass('sent-arr',i,'c-found');
+    if(status) status.innerHTML='<span class="found">✅ Found at index '+i+' (real match, not sentinel)</span>';
+  } else if(arr[n-1]===sentTarget && savedLast===sentTarget){
+    // last element was actually the target
+    if(lastEl) lastEl.querySelector('.cell-val').textContent=savedLast;
+    setClass('sent-arr',i,'c-found');
+    if(status) status.innerHTML='<span class="found">✅ Found at index '+i+' (last element is the target)</span>';
+  } else {
+    // only sentinel matched — target not in original array
+    if(lastEl) lastEl.querySelector('.cell-val').textContent=savedLast;
+    setClass('sent-arr',i,'c-dim');
+    if(status) status.innerHTML='<span class="fail">❌ Only sentinel matched — '+sentTarget+' is NOT in the array</span>';
+  }
+
+  sentRunning=false;
+}
+
+// ═══════════ FIND ALL OCCURRENCES ═══════════
+var faArr=[5,3,7,3,9,3], faRunning=false;
+function faReset(){
+  faRunning=false;
+  buildCells(faArr,'fa-arr');
+  var s=document.getElementById('fa-status'); if(s) s.textContent='Click ▶ Trace to begin';
+  var r=document.getElementById('fa-result'); if(r) r.textContent='—';
+  var target=document.getElementById('fa-val');
+  var title=document.querySelector('#fa-arr')?.closest('.viz')?.querySelector('.viz-title');
+}
+async function faRun(){
+  if(faRunning) return; faRunning=true;
+  var faTarget=parseInt(document.getElementById('fa-val').value);
+  // reset visuals before every run
+  buildCells(faArr,'fa-arr');
+  var resultEl=document.getElementById('fa-result');
+  if(resultEl) resultEl.textContent='—';
+  var status=document.getElementById('fa-status');
+  if(status) status.textContent='Scanning for '+faTarget+'...';
+  var found=[];
+  await sleep(300);
+  for(var i=0;i<faArr.length;i++){
+    if(!faRunning) break;
+    setClass('fa-arr',i,'c-active');
+    if(status) status.innerHTML='<span class="step">i='+i+':</span> arr['+i+']='+faArr[i]+' vs target='+faTarget;
+    await sleep(600);
+    if(faArr[i]===faTarget){
+      setClass('fa-arr',i,'c-found');
+      found.push(i);
+      if(resultEl) resultEl.textContent='['+found.join(', ')+']';
+      if(status) status.innerHTML='<span class="found">✅ Match at index '+i+'!</span> Continuing scan...';
+    } else {
+      setClass('fa-arr',i,'c-dim');
+    }
+    await sleep(400);
+  }
+if(found.length > 0){
+    if(status) status.innerHTML='<span class="found">✅ Done! Target='+faTarget+' found '+found.length+' time(s) at indices: ['+found.join(', ')+']</span>';
+    if(resultEl) resultEl.textContent='['+found.join(', ')+']';
+  } else {
+    if(status) status.innerHTML='<span class="fail">❌ Target='+faTarget+' not found in array</span>';
+    if(resultEl) resultEl.textContent='not found';
+  }
+  faRunning=false;
+}
+
+// ═══════════ 2D GRID SEARCH ═══════════
+var g2dMatrix=[[1,2,3],[4,5,6],[7,8,9]], g2dRunning=false;
+function g2dReset(){
+  g2dRunning=false;
+  var g=document.getElementById('grid2d'); if(!g) return;
+  g.innerHTML='';
+  g2dMatrix.forEach(function(row,r){
+    row.forEach(function(v,c){
+      var cell=document.createElement('div');
+      cell.id='g2d_'+r+'_'+c;
+      cell.style.cssText='background:var(--bg4);border:1.5px solid var(--border3);border-radius:6px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--text);transition:all .3s';
+      cell.textContent=v;
+      g.appendChild(cell);
+    });
+  });
+  var s=document.getElementById('g2d-status');
+  if(s) s.textContent='Click ▶ Trace to scan row by row';
+}
+function setG2D(r,c,bg,border,color){
+  var el=document.getElementById('g2d_'+r+'_'+c);
+  if(el){ el.style.background=bg; el.style.borderColor=border; el.style.color=color; }
+}
+async function g2dRun(){
+  if(g2dRunning) return;
+  // rebuild grid manually — do NOT call g2dReset() here
+  var g=document.getElementById('grid2d'); if(!g) return;
+  g.innerHTML='';
+  g2dMatrix.forEach(function(row,r){
+    row.forEach(function(v,c){
+      var cell=document.createElement('div');
+      cell.id='g2d_'+r+'_'+c;
+      cell.style.cssText='background:var(--bg4);border:1.5px solid var(--border3);border-radius:6px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--text);transition:all .3s';
+      cell.textContent=v;
+      g.appendChild(cell);
+    });
+  });
+  g2dRunning=true;  // set TRUE only after grid is built
+  var g2dTarget=parseInt(document.getElementById('g2d-val').value);
+  var status=document.getElementById('g2d-status');
+  if(status) status.innerHTML='Scanning for <strong style="color:var(--yellow)">'+g2dTarget+'</strong>...';
+  await sleep(300);
+  var found=false;
+  for(var r=0;r<g2dMatrix.length;r++){
+    for(var c=0;c<g2dMatrix[r].length;c++){
+      if(!g2dRunning) break;
+      setG2D(r,c,'rgba(251,191,36,.15)','var(--yellow)','var(--yellow)');
+      if(status) status.innerHTML='<span class="step">Row '+r+', Col '+c+':</span> Checking <strong>'+g2dMatrix[r][c]+'</strong> vs target=<strong>'+g2dTarget+'</strong>';
+      await sleep(500);
+      if(g2dMatrix[r][c]===g2dTarget){
+        setG2D(r,c,'rgba(74,222,128,.2)','var(--green)','var(--green)');
+        if(status) status.innerHTML='<span class="found">✅ Found '+g2dTarget+' at [row='+r+', col='+c+']</span>';
+        found=true;
+        g2dRunning=false; return;
+      }
+      setG2D(r,c,'rgba(255,255,255,.02)','#222','#333');
+    }
+  }
+  if(!found && status) status.innerHTML='<span class="fail">❌ '+g2dTarget+' not found in matrix</span>';
+  g2dRunning=false;
+}
+
+// ═══════════ FIRST OCCURRENCE ═══════════
+var foArr=[1,3,3,3,5,7], foRunning=false;
+function foReset(){
+  foRunning=false;
+  buildCells(foArr,'fo-arr');
+  var s=document.getElementById('fo-status'); if(s) s.textContent='Click ▶ Trace';
+}
+async function foRun(){
+  if(foRunning) return; foRunning=true;
+  var foTarget=parseInt(document.getElementById('fo-val').value);
+  buildCells(foArr,'fo-arr');
+  var status=document.getElementById('fo-status');
+  var n=foArr.length, lo=0, hi=n-1, result=-1, step=0;
+  while(lo<=hi){
+    if(!foRunning) break;
+    step++;
+    var mid=Math.floor((lo+hi)/2);
+    clearClasses('fo-arr',n);
+    for(var k=0;k<lo;k++) setClass('fo-arr',k,'c-dim');
+    for(var k=hi+1;k<n;k++) setClass('fo-arr',k,'c-dim');
+    setClass('fo-arr',lo,'c-lo');
+    setClass('fo-arr',hi,'c-hi');
+    setClass('fo-arr',mid,'c-mid');
+    if(result!==-1) setClass('fo-arr',result,'c-found');
+    if(status) status.innerHTML='<span class="step">Step '+step+':</span> lo='+lo+', mid='+mid+', hi='+hi+' → arr['+mid+']='+foArr[mid];
+    await sleep(900);
+    if(foArr[mid]===foTarget){
+      result=mid;
+      setClass('fo-arr',mid,'c-found');
+      if(status) status.innerHTML='Match at '+mid+'! But continuing LEFT to find FIRST → hi='+(mid-1);
+      hi=mid-1;
+    } else if(foArr[mid]<foTarget){
+      lo=mid+1;
+    } else {
+      hi=mid-1;
+    }
+    await sleep(700);
+  }
+  clearClasses('fo-arr',n);
+  if(result!==-1){
+    setClass('fo-arr',result,'c-found');
+    if(status) status.innerHTML='<span class="found">✅ First occurrence of '+foTarget+' is at index '+result+'</span>';
+  } else {
+    if(status) status.innerHTML='<span class="fail">Not found</span>';
+  }
+  foRunning=false;
+}
+
+// ═══════════ ROTATED ARRAY SEARCH ═══════════
+var rotArr=[4,5,6,7,0,1,2], rotRunning=false;
+function rotReset(){
+  rotRunning=false;
+  buildCells(rotArr,'rot-arr');
+  var s=document.getElementById('rot-status'); if(s) s.textContent='Click ▶ Trace';
+}
+async function rotRun(){
+  if(rotRunning) return; rotRunning=true;
+  var rotTarget=parseInt(document.getElementById('rot-val').value);
+  buildCells(rotArr,'rot-arr');
+  var status=document.getElementById('rot-status');
+  var n=rotArr.length, lo=0, hi=n-1, step=0;
+  while(lo<=hi){
+    if(!rotRunning) break;
+    step++;
+    var mid=Math.floor((lo+hi)/2);
+    clearClasses('rot-arr',n);
+    for(var k=0;k<lo;k++) setClass('rot-arr',k,'c-dim');
+    for(var k=hi+1;k<n;k++) setClass('rot-arr',k,'c-dim');
+    setClass('rot-arr',lo,'c-lo');
+    setClass('rot-arr',hi,'c-hi');
+    setClass('rot-arr',mid,'c-mid');
+    if(status) status.innerHTML='<span class="step">Step '+step+':</span> lo='+lo+', mid='+mid+', hi='+hi+' → arr['+mid+']='+rotArr[mid];
+    await sleep(900);
+    if(rotArr[mid]===rotTarget){
+      setClass('rot-arr',mid,'c-found');
+      if(status) status.innerHTML='<span class="found">✅ Found '+rotTarget+' at index '+mid+' in '+step+' steps</span>';
+      rotRunning=false; return;
+    }
+    if(rotArr[lo]<=rotArr[mid]){
+      // left half sorted
+      for(var k=lo;k<mid;k++) setClass('rot-arr',k,'c-sorted');
+      if(status) status.innerHTML='<span class="step">Step '+step+':</span> LEFT half ['+lo+'..'+mid+'] is sorted. Checking if '+rotTarget+' is in it...';
+      await sleep(700);
+      if(rotTarget>=rotArr[lo]&&rotTarget<rotArr[mid]){
+        hi=mid-1;
+        if(status) status.innerHTML='Target '+rotTarget+' IS in sorted left half → hi='+(mid-1);
+      } else {
+        lo=mid+1;
+        if(status) status.innerHTML='Target '+rotTarget+' NOT in left half → lo='+(mid+1);
+      }
+    } else {
+      // right half sorted
+      for(var k=mid+1;k<=hi;k++) setClass('rot-arr',k,'c-sorted');
+      if(status) status.innerHTML='<span class="step">Step '+step+':</span> RIGHT half ['+mid+'..'+hi+'] is sorted. Checking if '+rotTarget+' is in it...';
+      await sleep(700);
+      if(rotTarget>rotArr[mid]&&rotTarget<=rotArr[hi]){
+        lo=mid+1;
+        if(status) status.innerHTML='Target '+rotTarget+' IS in sorted right half → lo='+(mid+1);
+      } else {
+        hi=mid-1;
+        if(status) status.innerHTML='Target '+rotTarget+' NOT in right half → hi='+(mid-1);
+      }
+    }
+    await sleep(600);
+  }
+  if(status) status.innerHTML='<span class="fail">❌ Target '+rotTarget+' not found</span>';
+  rotRunning=false;
 }
 </script>
 </body>
